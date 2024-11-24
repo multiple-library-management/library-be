@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: backend-library
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+#    initialization-mode: always
