@@ -175,25 +175,22 @@ CREATE TABLE IF NOT EXISTS copy (
 );
 
 CREATE TABLE IF NOT EXISTS workshift (
-    id SERIAL UNIQUE NOT NULL,
+    id SERIAL NOT NULL,
     
     date DATE NOT NULL,
-    
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS time (
-    workshift_id SERIAL NOT NULL,
-    
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     
-    CONSTRAINT fk_workshift 
-    	FOREIGN KEY (workshift_id) 
-    		REFERENCES workshift (id),
-    		
-    PRIMARY KEY (workshift_id, start_time, end_time)
+    employee_id serial not null,
+
+    
+    constraint fk_employee
+    foreign key (employee_id)
+    references employee (id),
+    
+    PRIMARY KEY (id, employee_id, date)
 );
+
 
 CREATE TABLE IF NOT EXISTS member (
     id SERIAL NOT NULL,
@@ -207,6 +204,8 @@ CREATE TABLE IF NOT EXISTS member (
     phone VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     salary INTEGER NOT NULL,
+    
+    is_banned boolean not null default false,
     
     PRIMARY KEY (id)
 );
@@ -260,9 +259,9 @@ CREATE TABLE IF NOT EXISTS borrow_ticket (
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     return_date TIMESTAMP,
-    total_fee INTEGER NOT NULL,
-    amount INTEGER NOT NULL,
-    total_fine INTEGER,
+    fee INTEGER NOT NULL,
+    fine INTEGER,
+    status_on_return varchar(50) check (status_on_return in ('good', 'bad', 'lost')),
     
     copy_id SERIAL NOT NULL,
     member_id SERIAL NOT NULL,
@@ -283,22 +282,5 @@ CREATE TABLE IF NOT EXISTS borrow_ticket (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS borrow_ticket_copy (
-    borrow_ticket_id SERIAL NOT NULL,
-    copy_id SERIAL NOT NULL,
-    
-    fee INT NOT NULL,
-    fine INT,
-    status_on_return VARCHAR(50) CHECK (status_on_return IN ('good', 'bad')),
-    
-    CONSTRAINT fk_borrow_ticket 
-    	FOREIGN KEY (borrow_ticket_id) 
-    		REFERENCES borrow_ticket (id),
-    		
-    CONSTRAINT fk_copy 
-    	FOREIGN KEY (copy_id) 
-    		REFERENCES copy (id),
-    		
-    PRIMARY KEY (borrow_ticket_id, copy_id)
-);
+
 
