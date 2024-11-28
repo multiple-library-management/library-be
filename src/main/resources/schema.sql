@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS document (
     
     title VARCHAR(50) NOT NULL,
     language VARCHAR(50) NOT NULL,
+    image VARCHAR(700),
     price NUMERIC(20, 0) NOT NULL,
     publisher_name VARCHAR(100) NOT NULL,
     document_type VARCHAR(50) NOT NULL CHECK (document_type IN ('book', 'magazine')),
