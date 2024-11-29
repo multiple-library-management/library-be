@@ -2,20 +2,20 @@
 CREATE OR REPLACE FUNCTION check_total_participation_employee()
 RETURNS TRIGGER AS $$
 BEGIN
-	IF NOT EXISTS (SELECT 1 FROM Employee WHERE id = NEW.ID) THEN
-		RAISE EXCEPTion 'This new employee is not registered yet';
+	IF NOT EXISTS (SELECT 1 FROM Employees WHERE id = NEW.ID) THEN
+		RAISE EXCEPTION 'This new employee is not registered yet';
 END IF;
 RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER ensure_specialization_librarian
-BEFORE INSERT OR UPDATE ON librarian
+CREATE OR REPLACE TRIGGER before_insert_update_ensure_specialization_librarian
+BEFORE INSERT OR UPDATE ON librarians
 FOR EACH ROW
 EXECUTE FUNCTION check_total_participation_employee();
 
-CREATE OR REPLACE TRIGGER ensure_specialization_warehouse_staff
-BEFORE INSERT OR UPDATE ON warehouse_staff
+CREATE OR REPLACE TRIGGER before_insert_update_ensure_specialization_warehouse_staff
+BEFORE INSERT OR UPDATE ON warehouse_staffs
 FOR EACH ROW
 EXECUTE FUNCTION check_total_participation_employee();
 
@@ -35,8 +35,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-create or replace TRIGGER check_one_location_copy
-BEFORE INSERT OR UPDATE ON copy
+create or replace TRIGGER before_insert_update_check_one_location_copy
+BEFORE INSERT OR UPDATE ON copies
 FOR EACH ROW
 EXECUTE FUNCTION enforce_one_location_copy();
 
@@ -47,7 +47,7 @@ BEGIN
     -- Check if there is any other borrow ticket with the same Member_ID and NULL Return_Date
     IF EXISTS (
         SELECT 1
-        FROM borrow_ticket
+        FROM borrow_tickets
         WHERE Member_ID = NEW.Member_ID
           AND Return_Date IS NULL
           AND ID != NEW.ID -- Exclude the current ticket being inserted
@@ -61,40 +61,35 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-create or replace TRIGGER check_active_borrow_ticket
-BEFORE INSERT ON borrow_ticket
+create or replace TRIGGER before_insert_check_active_borrow_ticket
+BEFORE INSERT ON borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_multiple_active_tickets();
 
 ----------------------------------------------------- IF MEMBER DO NOT RETURN AFTER 30 DAYS THEY WILL BE BANNED, AND THE BOOK IS MARKED TO LOST  -----------------------------------------------------
 
-CREATE OR REPLACE FUNCTION check_and_update_status()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Update status_on_return if overdue
-    IF NEW.return_date IS NULL AND CURRENT_DATE - NEW.end_date > 30 THEN
-        UPDATE borrow_ticket
-        SET status_on_return = 'lost'
-        WHERE id = NEW.id;
-
-		UPDATE copy
-		SET status = 'lost'
-		WHERE id = NEW.copy_id;
-
-        UPDATE member
+SELECT cron.schedule(
+    'check_overdue_borrowed_books',
+    '0 0 * * 0',
+    $$
+        -- Update members who have overdue borrowed books
+        UPDATE members
         SET is_banned = true
-        WHERE id = NEW.member_id;
-    END IF;
+        FROM borrow_tickets
+        WHERE members.id = borrow_tickets.member_id
+            AND borrow_tickets.return_date IS NULL
+            AND current_date > (borrow_tickets.end_date + INTERVAL '30 days');
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+        -- Update copies status to 'lost' for overdue books
+        UPDATE copies
+        SET status = 'lost'
+        FROM borrow_tickets
+        WHERE copies.id = borrow_tickets.copy_id
+            AND borrow_tickets.return_date IS NULL
+            AND current_date > (borrow_tickets.end_date + INTERVAL '30 days');
+    $$ 
+);
 
-
-create or REPLACE TRIGGER auto_update_status
-AFTER INSERT OR UPDATE ON borrow_ticket
-FOR EACH ROW
-EXECUTE FUNCTION check_and_update_status();
 
 
 ----------------------------------------------------- IF MEMBER IS BEING BANNED CANNOT CREATE TICKET TO BORROW -----------------------------------------------------
@@ -105,7 +100,7 @@ BEGIN
     -- Check if the member is banned
     IF EXISTS (
         SELECT 1
-        FROM Member
+        FROM members
         WHERE ID = NEW.Member_ID AND Is_Banned = TRUE
     ) THEN
         RAISE EXCEPTION 'Banned members cannot create a new borrow ticket';
@@ -116,8 +111,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER check_banned_member
-BEFORE INSERT ON Borrow_Ticket
+CREATE OR REPLACE TRIGGER before_insert_check_banned_member
+BEFORE INSERT ON borrow_tickets
 EXECUTE FUNCTION prevent_banned_member_ticket();
 
 
@@ -131,15 +126,15 @@ DECLARE
 BEGIN
     -- Get the library_id of the copy being borrowed
     SELECT library_id INTO library_id
-    FROM copy
+    FROM copies
     WHERE id = NEW.copy_id;
 
     -- Count the number of available copies of the same document in the library
     SELECT COUNT(*) INTO available_count
-    FROM copy
+    FROM copies
     WHERE document_id = (
             SELECT document_id
-            FROM copy
+            FROM copies
             WHERE id = NEW.copy_id
         )
       AND library_id = library_id
@@ -164,8 +159,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER check_copy_availability
-BEFORE INSERT ON borrow_ticket
+CREATE OR REPLACE TRIGGER before_insert_update_check_copy_availability
+BEFORE INSERT ON borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_borrowing_if_low_stock();
 
