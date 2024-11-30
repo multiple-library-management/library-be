@@ -1,24 +1,3 @@
------------------------------------------------------ TOTAL PARTICIPATION ON LIBRARIAN AND WAREHOUSE STAFF -----------------------------------------------------
-CREATE OR REPLACE FUNCTION check_total_participation_employee()
-RETURNS TRIGGER AS $$
-BEGIN
-	IF NOT EXISTS (SELECT 1 FROM Employees WHERE id = NEW.ID) THEN
-		RAISE EXCEPTION 'This new employee is not registered yet';
-END IF;
-RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE TRIGGER before_insert_update_ensure_specialization_librarian
-BEFORE INSERT OR UPDATE ON librarians
-FOR EACH ROW
-EXECUTE FUNCTION check_total_participation_employee();
-
-CREATE OR REPLACE TRIGGER before_insert_update_ensure_specialization_warehouse_staff
-BEFORE INSERT OR UPDATE ON warehouse_staffs
-FOR EACH ROW
-EXECUTE FUNCTION check_total_participation_employee();
-
 ----------------------------------------------------- EITHER LIBRARY_ID OR WAREHOUSE_ID MUST BE NULL, THE OTHER ONE HAVE A VALUE  -----------------------------------------------------
 CREATE OR REPLACE FUNCTION enforce_one_location_copy()
 RETURNS TRIGGER AS $$
@@ -113,6 +92,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER before_insert_check_banned_member
 BEFORE INSERT ON borrow_tickets
+FOR EACH ROW
 EXECUTE FUNCTION prevent_banned_member_ticket();
 
 

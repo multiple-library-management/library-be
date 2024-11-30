@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS genres (
 );
 
 CREATE TABLE IF NOT EXISTS document_genres (
-    document_id SERIAL NOT NULL,
-	genre_id SERIAL NOT NULL,
+    document_id INT NOT NULL,
+	genre_id INT NOT NULL,
     
     CONSTRAINT fk_document 
     	FOREIGN KEY (document_id) 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS document_genres (
 );
 
 CREATE TABLE IF NOT EXISTS document_authors (
-    document_id SERIAL NOT NULL,
+    document_id INT NOT NULL,
     author_name VARCHAR(70) NOT NULL,
     
     CONSTRAINT fk_document 
@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS "libraries" (
     
     name VARCHAR(50) NOT NULL,
 
+
 	address VARCHAR(50) NOT NULL,
     district VARCHAR(50) NOT NULL,
     ward VARCHAR(50) NOT NULL,
@@ -85,16 +86,19 @@ CREATE TABLE IF NOT EXISTS "libraries" (
 );
 
 CREATE TABLE IF NOT EXISTS librarians (
-    id SERIAL UNIQUE NOT NULL,
-    library_id SERIAL NOT NULL,
+    id SERIAL NOT NULL,
+    library_id INT NOT NULL,
+
+	employee_id INT NOT NULL,
+
     
-    CONSTRAINT fk_id_employee 
-    	FOREIGN KEY (id) 
+    CONSTRAINT fk_employee 
+    	FOREIGN KEY (employee_id) 
     		REFERENCES employees (id)
 				ON DELETE RESTRICT,
     		
     CONSTRAINT fk_library 
-    	FOREIGN KEY (id) 
+    	FOREIGN KEY (library_id) 
     		REFERENCES libraries (id)
 				ON DELETE RESTRICT,
     		
@@ -102,7 +106,7 @@ CREATE TABLE IF NOT EXISTS librarians (
 );
 
 CREATE TABLE IF NOT EXISTS warehouses (
-    id SERIAL UNIQUE NOT NULL,
+    id SERIAL NOT NULL,
     
     name VARCHAR(50) NOT NULL,
 
@@ -116,12 +120,14 @@ CREATE TABLE IF NOT EXISTS warehouses (
 );
 
 CREATE TABLE IF NOT EXISTS warehouse_staffs (
-    id SERIAL UNIQUE NOT NULL,
+    id SERIAL NOT NULL,
     
-    warehouse_id SERIAL NOT NULL,
+    warehouse_id INT NOT NULL,
+
+	employee_id INT NOT NULL,
     
     CONSTRAINT fk_id_employee 
-    	FOREIGN KEY (id) 
+    	FOREIGN KEY (employee_id) 
     		REFERENCES employees (id)
 				ON DELETE RESTRICT,
     		
@@ -141,8 +147,8 @@ CREATE TABLE IF NOT EXISTS "orders" (
     ship_end_date TIMESTAMP NOT NULL,
     total_price INT NOT NULL,
     
-    warehouse_id SERIAL NOT NULL,
-    warehouse_staff_id SERIAL NOT NULL,
+    warehouse_id INT NOT NULL,
+    warehouse_staff_id INT NOT NULL,
     
     CONSTRAINT fk_warehouse 
     	FOREIGN KEY (warehouse_id) 
@@ -164,10 +170,10 @@ CREATE TABLE IF NOT EXISTS "copies" (
     retail_price INTEGER NOT NULL,
     status VARCHAR(50) CHECK (status IN ('borrowing', 'available', 'lost', 'transporting')),
     
-    document_id SERIAL NOT NULL,
-    library_id SERIAL,
-    warehouse_id SERIAL,
-    order_id SERIAL NOT NULL,
+    document_id INT NOT NULL,
+    library_id INT,
+    warehouse_id INT,
+    order_id INT NOT NULL,
     
     CONSTRAINT fk_document 
     	FOREIGN KEY (document_id) 
@@ -199,7 +205,7 @@ CREATE TABLE IF NOT EXISTS workshifts (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     
-    employee_id serial not null,
+    employee_id INT NOT NULL,
 
     
     CONSTRAINT fk_employee
@@ -240,9 +246,9 @@ CREATE TABLE IF NOT EXISTS transfers (
     amount INTEGER NOT NULL,
     type VARCHAR(50) CHECK (type IN ('import', 'export')),
     
-    library_id SERIAL NOT NULL,
-    warehouse_id SERIAL NOT NULL,
-    warehouse_staff_id SERIAL NOT NULL,
+    library_id INT NOT NULL,
+    warehouse_id INT NOT NULL,
+    warehouse_staff_id INT NOT NULL,
     
     CONSTRAINT fk_library 
     	FOREIGN KEY (library_id) 
@@ -263,8 +269,8 @@ CREATE TABLE IF NOT EXISTS transfers (
 );
 
 CREATE TABLE IF NOT EXISTS copy_transfers (
-    copy_id SERIAL NOT NULL,
-    transfer_id SERIAL NOT NULL,
+    copy_id INT NOT NULL,
+    transfer_id INT NOT NULL,
     
     CONSTRAINT fk_copy 
     	FOREIGN KEY (copy_id) 
@@ -289,9 +295,9 @@ CREATE TABLE IF NOT EXISTS borrow_tickets (
     fine INTEGER,
     status_on_return varchar(50) check (status_on_return in ('good', 'bad', 'lost')),
     
-    copy_id SERIAL NOT NULL,
-    member_id SERIAL NOT NULL,
-    librarian_id SERIAL NOT NULL,
+    copy_id INT NOT NULL,
+    member_id INT NOT NULL,
+    librarian_id INT NOT NULL,
     
     CONSTRAINT fk_copy 
     	FOREIGN KEY (copy_id) 
