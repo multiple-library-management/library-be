@@ -102,10 +102,10 @@ CREATE OR REPLACE FUNCTION prevent_borrowing_if_low_stock()
 RETURNS TRIGGER AS $$
 DECLARE
     available_count INTEGER;
-    library_id INTEGER;
+    l_id INTEGER;
 BEGIN
     -- Get the library_id of the copy being borrowed
-    SELECT library_id INTO library_id
+    SELECT library_id INTO l_id
     FROM copies
     WHERE id = NEW.copy_id;
 
@@ -117,7 +117,7 @@ BEGIN
             FROM copies
             WHERE id = NEW.copy_id
         )
-      AND library_id = library_id
+      AND library_id = l_id
       AND status = 'available';
 
     -- Raise an exception if available copies are less than 10

@@ -2,8 +2,11 @@ spring:
   application:
     name: backend-library
   datasource:
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://localhost:5432/postgres
     username: root
     password: root
     driver-class-name: org.postgresql.Driver
 #    initialization-mode: always
+
+app:
+  api-prefix: /api

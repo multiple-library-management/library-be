@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS document_genres (
     CONSTRAINT fk_document 
     	FOREIGN KEY (document_id) 
     		REFERENCES documents (id) 
-    			ON DELETE RESTRICT,
+    			ON DELETE CASCADE,
     			
     CONSTRAINT fk_genre 
     	FOREIGN KEY (genre_id) 
     		REFERENCES genres (id) 
-    			ON DELETE RESTRICT,
+    			ON DELETE CASCADE,
     			
     PRIMARY KEY (document_id, genre_id)
 );
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS document_authors (
     CONSTRAINT fk_document 
     	FOREIGN KEY (document_id) 
     		REFERENCES documents (id) 
-    			ON DELETE RESTRICT,
+    			ON DELETE CASCADE,
     			
     PRIMARY KEY (document_id, author_name)
 );

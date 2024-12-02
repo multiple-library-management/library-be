@@ -65,25 +65,25 @@ $$ LANGUAGE plpgsql;
 
 
 -- Declare a variable to hold the result
-DO $$ 
-DECLARE
-    doc_count INT;
-BEGIN
-    -- Call the procedure and store the result in doc_count
-    CALL get_document_count_by_type('book', doc_count);
+-- DO $$ 
+-- DECLARE
+--     doc_count INT;
+-- BEGIN
+--     -- Call the procedure and store the result in doc_count
+--     CALL get_document_count_by_type('book', doc_count);
     
-    -- Output the result
-    RAISE NOTICE 'Document count: %', doc_count;
-END $$;
+--     -- Output the result
+--     RAISE NOTICE 'Document count: %', doc_count;
+-- END $$;
 
-DO $$ 
-DECLARE
-    total_price INT;
-BEGIN
-    -- Call the procedure and store the result in total_price
-    CALL get_total_order_price('2024-11-01 00:00:00', '2024-12-30 23:59:59', 1, total_price);
+-- DO $$ 
+-- DECLARE
+--     total_price INT;
+-- BEGIN
+--     -- Call the procedure and store the result in total_price
+--     CALL get_total_order_price('2024-11-01 00:00:00', '2024-12-30 23:59:59', 1, total_price);
     
-    -- Output the result
-    RAISE NOTICE 'Total price of orders: %', total_price;
-END $$;
+--     -- Output the result
+--     RAISE NOTICE 'Total price of orders: %', total_price;
+-- END $$;
 

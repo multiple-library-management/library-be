@@ -88,77 +88,77 @@ $$ LANGUAGE plpgsql;
 
 
 
--- Sample members data
-INSERT INTO members (id, first_name, last_name, address, district, ward, street, city, phone, email, salary)
-VALUES
-(1, 'John', 'Doe', '123 Main St', 'District A', 'Ward 1', 'Street X', 'City Y', '123-456-7890', 'john.doe@example.com', 5000),
-(2, 'Jane', 'Smith', '456 Oak St', 'District B', 'Ward 2', 'Street Y', 'City Z', '987-654-3210', 'jane.smith@example.com', 4500);
+-- -- Sample members data
+-- INSERT INTO members (id, first_name, last_name, address, district, ward, street, city, phone, email, salary)
+-- VALUES
+-- (1, 'John', 'Doe', '123 Main St', 'District A', 'Ward 1', 'Street X', 'City Y', '123-456-7890', 'john.doe@example.com', 5000),
+-- (2, 'Jane', 'Smith', '456 Oak St', 'District B', 'Ward 2', 'Street Y', 'City Z', '987-654-3210', 'jane.smith@example.com', 4500);
 
-INSERT INTO libraries (
-    name,
-    address,
-    district,
-    ward,
-    street,
-    city
-) 
-VALUES 
-(
-    'Central Library', 
-    '123 Library St', 
-    'District A', 
-    'Ward 5', 
-    'Main Street', 
-    'City X'
-);
-
--- Insert employee first into employees table
-INSERT INTO employees (
-    first_name,
-    last_name,
-    address,
-    district,
-    ward,
-    street,
-    city,
-    phone,
-    email,
-    salary
-) 
-VALUES 
-(
-    'Alice', 
-    'Johnson', 
-    '456 Employee Rd', 
-    'District A', 
-    'Ward 5', 
-    'Second Street', 
-    'City X',
-    '123-111-2233', 
-    'alice.johnson@example.com',
-    4000
-);
-
--- Suppose Alice's employee ID is 1 and we want to assign her as a librarian
--- INSERT INTO librarians (
---     library_id, 
---     employee_id
+-- INSERT INTO libraries (
+--     name,
+--     address,
+--     district,
+--     ward,
+--     street,
+--     city
 -- ) 
 -- VALUES 
 -- (
---     1, 
---     1
+--     'Central Library', 
+--     '123 Library St', 
+--     'District A', 
+--     'Ward 5', 
+--     'Main Street', 
+--     'City X'
 -- );
 
+-- -- Insert employee first into employees table
+-- INSERT INTO employees (
+--     first_name,
+--     last_name,
+--     address,
+--     district,
+--     ward,
+--     street,
+--     city,
+--     phone,
+--     email,
+--     salary
+-- ) 
+-- VALUES 
+-- (
+--     'Alice', 
+--     'Johnson', 
+--     '456 Employee Rd', 
+--     'District A', 
+--     'Ward 5', 
+--     'Second Street', 
+--     'City X',
+--     '123-111-2233', 
+--     'alice.johnson@example.com',
+--     4000
+-- );
+
+-- -- Suppose Alice's employee ID is 1 and we want to assign her as a librarian
+-- -- INSERT INTO librarians (
+-- --     library_id, 
+-- --     employee_id
+-- -- ) 
+-- -- VALUES 
+-- -- (
+-- --     1, 
+-- --     1
+-- -- );
 
 
--- Sample borrow tickets data
-INSERT INTO borrow_tickets (start_date, end_date, return_date, fee, fine, status_on_return, copy_id, member_id, librarian_id)
-VALUES
-('2023-01-01', '2023-01-10', '2023-01-12', 10, 5, 'good', 4, 1, 1),
-('2023-02-01', '2023-02-10', '2023-02-12', 10, 5, 'bad', 4, 1, 1),
-('2023-03-01', '2023-03-10', '2023-03-15', 10, 5, 'lost', 4, 2, 1);
+
+-- -- Sample borrow tickets data
+-- INSERT INTO borrow_tickets (start_date, end_date, return_date, fee, fine, status_on_return, copy_id, member_id, librarian_id)
+-- VALUES
+-- ('2023-01-01', '2023-01-10', '2023-01-12', 10, 5, 'good', 4, 1, 1),
+-- ('2023-02-01', '2023-02-10', '2023-02-12', 10, 5, 'bad', 4, 1, 1),
+-- ('2023-03-01', '2023-03-10', '2023-03-15', 10, 5, 'lost', 4, 2, 1);
 
 
-SELECT * FROM get_member_borrow_ticket_status_count(1);
+-- SELECT * FROM get_member_borrow_ticket_status_count(1);
 

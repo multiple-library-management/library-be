@@ -35,53 +35,53 @@ CREATE OR REPLACE TRIGGER after_update_insert_return_date_borrow_tickets
 	FOR EACH ROW
 	EXECUTE FUNCTION update_copy_status_on_return();
 
--- Insert a warehouse with id = 1
-INSERT INTO warehouses (name, address, district, ward, street, city)
-VALUES ('Warehouse 1', '123 Street', 'District A', 'Ward X', 'Main St.', 'City A');
+-- -- Insert a warehouse with id = 1
+-- INSERT INTO warehouses (name, address, district, ward, street, city)
+-- VALUES ('Warehouse 1', '123 Street', 'District A', 'Ward X', 'Main St.', 'City A');
 
--- Insert an employee into the employees table
-INSERT INTO employees (first_name, last_name, address, district, ward, street, city, phone, email, salary)
-VALUES ('John', 'Doe', '456 Another Street', 'District B', 'Ward Y', 'Elm St.', 'City B', '123-456-7890', 'johndoe@example.com', 3000);
+-- -- Insert an employee into the employees table
+-- INSERT INTO employees (first_name, last_name, address, district, ward, street, city, phone, email, salary)
+-- VALUES ('John', 'Doe', '456 Another Street', 'District B', 'Ward Y', 'Elm St.', 'City B', '123-456-7890', 'johndoe@example.com', 3000);
 
--- DROP FUNCTION IF EXISTS check_total_participation_employee();
--- DROP TRIGGER IF EXISTS after_insert_update_ensure_specialization_librarian ON librarians;
--- DROP TRIGGER IF EXISTS after_insert_update_ensure_specialization_warehouse_staff ON warehouse_staffs;
-
-
--- Insert warehouse staff, referencing the employee and warehouse
-INSERT INTO warehouse_staffs (warehouse_id, employee_id)
-VALUES (1, 1);
-
--- Insert a sample order
-INSERT INTO "orders" (created_date, ship_start_date, ship_end_date, total_price, warehouse_id, warehouse_staff_id)
-VALUES ('2024-11-30 10:00:00', '2024-12-01 10:00:00', '2024-12-05 10:00:00', 0, 1, 1);
-
--- Insert a new genre
-INSERT INTO genres (name)
-VALUES ('Science Fiction'), ('Fantasy'), ('Non-fiction');
+-- -- DROP FUNCTION IF EXISTS check_total_participation_employee();
+-- -- DROP TRIGGER IF EXISTS after_insert_update_ensure_specialization_librarian ON librarians;
+-- -- DROP TRIGGER IF EXISTS after_insert_update_ensure_specialization_warehouse_staff ON warehouse_staffs;
 
 
--- Insert a document (e.g., a book)
-INSERT INTO documents (title, "language", image, price, publisher_name, document_type, volume, frequency, edition)
-VALUES
-('The Galactic Odyssey', 'English', 'image_path_or_url_here', 25, 'Space Publishers', 'book', 1, NULL, 1);
+-- -- Insert warehouse staff, referencing the employee and warehouse
+-- INSERT INTO warehouse_staffs (warehouse_id, employee_id)
+-- VALUES (1, 1);
 
--- Insert a record into document_genres to associate the document with a genre
-INSERT INTO document_genres (document_id, genre_id)
-VALUES
-((SELECT id FROM documents WHERE title = 'The Galactic Odyssey'), (SELECT id FROM genres WHERE name = 'Science Fiction'));
+-- -- Insert a sample order
+-- INSERT INTO "orders" (created_date, ship_start_date, ship_end_date, total_price, warehouse_id, warehouse_staff_id)
+-- VALUES ('2024-11-30 10:00:00', '2024-12-01 10:00:00', '2024-12-05 10:00:00', 0, 1, 1);
 
--- Insert an author for the document
-INSERT INTO document_authors (document_id, author_name)
-VALUES
-((SELECT id FROM documents WHERE title = 'The Galactic Odyssey'), 'John Doe');
+-- -- Insert a new genre
+-- INSERT INTO genres (name)
+-- VALUES ('Science Fiction'), ('Fantasy'), ('Non-fiction');
 
--- Insert copies for this order
-INSERT INTO "copies" (fee, retail_price, status, document_id, library_id, warehouse_id, order_id)
-VALUES (5, 100, 'available', 1, NULL, 1, 2);
 
--- Check the total price of the order should now be 100
-SELECT * FROM "orders" WHERE id = 2;
+-- -- Insert a document (e.g., a book)
+-- INSERT INTO documents (title, "language", image, price, publisher_name, document_type, volume, frequency, edition)
+-- VALUES
+-- ('The Galactic Odyssey', 'English', 'image_path_or_url_here', 25, 'Space Publishers', 'book', 1, NULL, 1);
+
+-- -- Insert a record into document_genres to associate the document with a genre
+-- INSERT INTO document_genres (document_id, genre_id)
+-- VALUES
+-- ((SELECT id FROM documents WHERE title = 'The Galactic Odyssey'), (SELECT id FROM genres WHERE name = 'Science Fiction'));
+
+-- -- Insert an author for the document
+-- INSERT INTO document_authors (document_id, author_name)
+-- VALUES
+-- ((SELECT id FROM documents WHERE title = 'The Galactic Odyssey'), 'John Doe');
+
+-- -- Insert copies for this order
+-- INSERT INTO "copies" (fee, retail_price, status, document_id, library_id, warehouse_id, order_id)
+-- VALUES (5, 100, 'available', 1, NULL, 1, 2);
+
+-- -- Check the total price of the order should now be 100
+-- SELECT * FROM "orders" WHERE id = 2;
 
 
 	
