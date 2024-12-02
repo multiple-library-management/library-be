@@ -3,7 +3,7 @@ RETURNS TRIGGER AS $$
 BEGIN
 	-- Upadte the total price in the orders table whenever a new copy is added
 	UPDATE "orders"
-	SET total_price = total_price + NEW.retail_price
+	SET total_price = total_price + (SELECT price FROM documents WHERE id = NEW.document_id)
 	WHERE id = NEW.order_id;
 
 	RETURN NEW;

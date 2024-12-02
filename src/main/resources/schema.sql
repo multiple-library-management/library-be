@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS "copies" (
     id SERIAL NOT NULL,
     
     fee INTEGER NOT NULL,
-    retail_price INTEGER NOT NULL,
+--     retail_price INTEGER NOT NULL,
     status VARCHAR(50) CHECK (status IN ('borrowing', 'available', 'lost', 'transporting')),
     
     document_id INT NOT NULL,
