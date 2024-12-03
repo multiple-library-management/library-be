@@ -7,6 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class GenreCreationRequest {
+public class LibraryUpdateRequest {
     private String name;
+
+    private String address;
+    private String district;
+    private String ward;
+    private String street;
+    private String city;
 }

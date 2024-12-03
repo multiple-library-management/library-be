@@ -1,7 +1,7 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.example.backendlibrary.dtos.requests.GenreCreationRequest;
 import org.example.backendlibrary.dtos.requests.GenreUpdateRequest;
 import org.example.backendlibrary.dtos.responses.GenreResponse;
@@ -9,6 +9,8 @@ import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.services.GenreService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/genres")
@@ -37,26 +39,20 @@ public class GenreController {
     public Response<Void> createGenre(@RequestBody @Valid GenreCreationRequest genreCreationRequest) {
         genreService.create(genreCreationRequest);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 
     @PutMapping("/{id}")
     public Response<Void> updateGenre(@RequestBody GenreUpdateRequest genreUpdateRequest, @PathVariable Long id) {
         genreService.update(id, genreUpdateRequest);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 
     @DeleteMapping("/{id}")
     public Response<Void> deleteGenreById(@PathVariable Long id) {
         genreService.delete(id);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 }

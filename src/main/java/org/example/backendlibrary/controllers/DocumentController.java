@@ -1,14 +1,12 @@
 package org.example.backendlibrary.controllers;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
+
 import org.example.backendlibrary.dtos.requests.DocumentCreationRequest;
 import org.example.backendlibrary.dtos.requests.DocumentUpdateRequest;
 import org.example.backendlibrary.dtos.responses.DocumentResponse;
 import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
-import org.example.backendlibrary.entities.Document;
 import org.example.backendlibrary.services.DocumentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,26 +39,21 @@ public class DocumentController {
     public Response<Void> createDocument(@RequestBody @Valid DocumentCreationRequest documentCreationRequest) {
         documentService.create(documentCreationRequest);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateDocument(@RequestBody DocumentUpdateRequest documentUpdateRequest, @PathVariable Long id) {
+    public Response<Void> updateDocument(
+            @RequestBody DocumentUpdateRequest documentUpdateRequest, @PathVariable Long id) {
         documentService.update(id, documentUpdateRequest);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 
     @DeleteMapping("/{id}")
     public Response<Void> deleteDocument(@PathVariable Long id) {
         documentService.delete(id);
 
-        return Response.<Void>builder()
-                .success(true)
-                .build();
+        return Response.<Void>builder().success(true).build();
     }
 }

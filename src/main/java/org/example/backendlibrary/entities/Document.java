@@ -1,8 +1,8 @@
 package org.example.backendlibrary.entities;
 
-import lombok.*;
-
 import java.util.List;
+
+import lombok.*;
 
 @Getter
 @Setter

@@ -1,11 +1,12 @@
 package org.example.backendlibrary.repositories;
 
-
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
@@ -13,27 +14,24 @@ import org.springframework.stereotype.Repository;
 public class DocumentAuthorsRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public int addAuthorToDocument(Long documentId, String authorName){
+    public int addAuthorToDocument(Long documentId, String authorName) {
         String sql = """
-                INSERT INTO document_authors (document_id, author_name)
-                VALUES (?, ?);
-                """;
+				INSERT INTO document_authors (document_id, author_name)
+				VALUES (?, ?);
+				""";
 
-//        log.info("authorname: {}", authorName);
+        //        log.info("authorname: {}", authorName);
         return jdbcTemplate.update(sql, documentId, authorName);
     }
 
-    public List<String> getAuthorsByDocumentId(Long documentId){
+    public List<String> getAuthorsByDocumentId(Long documentId) {
         String sql = """
-                SELECT author_name
-                FROM document_authors
-                WHERE document_id = ?;
-                """;
+				SELECT author_name
+				FROM document_authors
+				WHERE document_id = ?;
+				""";
 
-        return jdbcTemplate.query(sql,
-                new Object[]{documentId},
-                (rs, rowNum) -> rs.getString("author_name")
-        );
+        return jdbcTemplate.query(sql, new Object[] {documentId}, (rs, rowNum) -> rs.getString("author_name"));
     }
 
     public void deleteAuthorByDocumentId(int documentId) {

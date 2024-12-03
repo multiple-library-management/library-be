@@ -3,8 +3,6 @@ package org.example.backendlibrary.repositories;
 import java.util.List;
 
 import org.example.backendlibrary.entities.Document;
-import org.example.backendlibrary.exceptions.AppException;
-import org.example.backendlibrary.exceptions.ErrorCode;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,7 +47,7 @@ public class DocumentRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Document.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            return null;
         }
     }
 
@@ -104,20 +102,19 @@ public class DocumentRepository {
 
     public boolean existsById(Long id) {
         String sql = """
-                SELECT COUNT(*) FROM documents WHERE id = ?;
-                """;
+				SELECT COUNT(*) FROM documents WHERE id = ?;
+				""";
         // Execute the query and check if the count is greater than 0
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[] {id}, Integer.class);
 
         return count != null && count > 0;
     }
 
-
     public long count() {
         // SQL query to count total documents
         String sql = """
-                SELECT COUNT(*) FROM documents
-                """;
+				SELECT COUNT(*) FROM documents
+				""";
 
         // Execute the query and return the result
         return jdbcTemplate.queryForObject(sql, Long.class);

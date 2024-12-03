@@ -1,10 +1,10 @@
 package org.example.backendlibrary.dtos.requests;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

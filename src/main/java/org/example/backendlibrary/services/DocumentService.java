@@ -3,7 +3,6 @@ package org.example.backendlibrary.services;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.backendlibrary.dtos.requests.DocumentCreationRequest;
 import org.example.backendlibrary.dtos.requests.DocumentUpdateRequest;
 import org.example.backendlibrary.dtos.responses.DocumentResponse;
@@ -20,6 +19,7 @@ import org.example.backendlibrary.repositories.GenreRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -32,7 +32,7 @@ public class DocumentService {
     private final DocumentMapper documentMapper;
 
     public PageResponse<DocumentResponse> getAll(int page, int size) {
-        List<Document>documents = documentRepository.findAll(page, size);
+        List<Document> documents = documentRepository.findAll(page, size);
 
         documents.forEach((document) -> {
             List<String> authors = documentAuthorsRepository.getAuthorsByDocumentId(document.getId());
@@ -46,7 +46,9 @@ public class DocumentService {
         int totalPages = (int) Math.ceil((double) totalRecords / size);
 
         return PageResponse.<DocumentResponse>builder()
-                .items(documents.stream().map(documentMapper::toDocumentResponse).toList())
+                .items(documents.stream()
+                        .map(documentMapper::toDocumentResponse)
+                        .toList())
                 .records(totalRecords)
                 .totalPages(totalPages)
                 .page(page)
@@ -75,7 +77,7 @@ public class DocumentService {
         int documentId = documentRepository.save(document);
 
         document.getAuthors().forEach(author -> {
-//            log.error("author name: {}", author);
+            //            log.error("author name: {}", author);
             documentAuthorsRepository.addAuthorToDocument((long) documentId, author);
         });
 
@@ -87,7 +89,8 @@ public class DocumentService {
                 return;
             }
 
-            documentGenresRepository.addGenreToDocument((long) documentId, optionalGenre.get().getId());
+            documentGenresRepository.addGenreToDocument(
+                    (long) documentId, optionalGenre.get().getId());
         });
     }
 
@@ -120,7 +123,6 @@ public class DocumentService {
 
             documentGenresRepository.addGenreToDocument(id, optionalGenre.get().getId());
         });
-
     }
 
     public void delete(Long id) {
@@ -130,5 +132,4 @@ public class DocumentService {
 
         documentRepository.deleteById(id);
     }
-
 }

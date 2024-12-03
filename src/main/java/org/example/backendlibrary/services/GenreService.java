@@ -1,6 +1,8 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.GenreCreationRequest;
 import org.example.backendlibrary.dtos.requests.GenreUpdateRequest;
 import org.example.backendlibrary.dtos.responses.GenreResponse;
@@ -12,8 +14,7 @@ import org.example.backendlibrary.mappers.GenreMapper;
 import org.example.backendlibrary.repositories.GenreRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

@@ -91,16 +91,15 @@ CREATE TABLE IF NOT EXISTS librarians (
 
 	employee_id INT NOT NULL,
 
-    
     CONSTRAINT fk_employee 
     	FOREIGN KEY (employee_id) 
     		REFERENCES employees (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
     CONSTRAINT fk_library 
     	FOREIGN KEY (library_id) 
     		REFERENCES libraries (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
     PRIMARY KEY (id)
 );
@@ -126,15 +125,15 @@ CREATE TABLE IF NOT EXISTS warehouse_staffs (
 
 	employee_id INT NOT NULL,
     
-    CONSTRAINT fk_id_employee 
+    CONSTRAINT fk_employee 
     	FOREIGN KEY (employee_id) 
     		REFERENCES employees (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
-    CONSTRAINT fk_id_warehouse 
+    CONSTRAINT fk_warehouse 
     	FOREIGN KEY (warehouse_id) 
     		REFERENCES warehouses (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
     PRIMARY KEY (id)
 );

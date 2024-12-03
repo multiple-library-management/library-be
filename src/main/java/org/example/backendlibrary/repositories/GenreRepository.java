@@ -1,16 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Genre;
-import org.example.backendlibrary.exceptions.AppException;
-import org.example.backendlibrary.exceptions.ErrorCode;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,14 +17,14 @@ public class GenreRepository {
 
     public Integer save(Genre genre) {
         String sql = """
-                INSERT INTO genres (name)
-                VALUES (?)
-                RETURNING id;
-                """;
+				INSERT INTO genres (name)
+				VALUES (?)
+				RETURNING id;
+				""";
 
-//        System.out.println("Genre name " + genre.getName());
+        //        System.out.println("Genre name " + genre.getName());
 
-        return jdbcTemplate.queryForObject(sql, new Object[]{genre.getName()}, Integer.class);
+        return jdbcTemplate.queryForObject(sql, new Object[] {genre.getName()}, Integer.class);
     }
 
     public Genre findById(Long id) {
@@ -39,7 +37,7 @@ public class GenreRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Genre.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new AppException(ErrorCode.GENRE_NOTFOUND);
+            return null;
         }
     }
 
@@ -60,12 +58,12 @@ public class GenreRepository {
 
     public Genre findByName(String name) {
         String sql = """
-                SELECT *
-                FROM genres
-                WHERE name = ?;
-                """;
+				SELECT *
+				FROM genres
+				WHERE name = ?;
+				""";
 
-//        System.out.println("name: " + name);
+        //        System.out.println("name: " + name);
 
         try {
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Genre.class), name);
@@ -75,17 +73,13 @@ public class GenreRepository {
     }
 
     public int update(Genre genre) {
-        String sql =
-                """
+        String sql = """
 				UPDATE genres
 				SET name = ?
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
-                sql,
-                genre.getName(),
-                genre.getId());
+        return jdbcTemplate.update(sql, genre.getName(), genre.getId());
     }
 
     public int deleteById(Long id) {
@@ -98,10 +92,10 @@ public class GenreRepository {
 
     public boolean existsById(Long id) {
         String sql = """
-                SELECT COUNT(*) FROM genres WHERE id = ?;
-                """;
+				SELECT COUNT(*) FROM genres WHERE id = ?;
+				""";
         // Execute the query and check if the count is greater than 0
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[] {id}, Integer.class);
 
         return count != null && count > 0;
     }
@@ -109,8 +103,8 @@ public class GenreRepository {
     public long count() {
         // SQL query to count total documents
         String sql = """
-                SELECT COUNT(*) FROM genres
-                """;
+				SELECT COUNT(*) FROM genres
+				""";
 
         // Execute the query and return the result
         return jdbcTemplate.queryForObject(sql, Long.class);
