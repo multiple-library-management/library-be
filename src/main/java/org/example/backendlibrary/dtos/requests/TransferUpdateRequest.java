@@ -1,7 +1,6 @@
 package org.example.backendlibrary.dtos.requests;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import lombok.*;
 

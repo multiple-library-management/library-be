@@ -10,7 +10,6 @@ import org.example.backendlibrary.dtos.requests.TransferCreationRequest;
 import org.example.backendlibrary.dtos.requests.TransferUpdateRequest;
 import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.TransferResponse;
-import org.example.backendlibrary.entities.Copy;
 import org.example.backendlibrary.entities.CopyTransfer;
 import org.example.backendlibrary.entities.Transfer;
 import org.example.backendlibrary.exceptions.AppException;
@@ -43,7 +42,8 @@ public class TransferService {
         transferResponses.forEach(transferResponse -> {
             List<CopyTransfer> copyTransfers = copyTransferRepository.findAllByTransferId(transferResponse.getId());
 
-            List<Long> copyTransferResponses = copyTransfers.stream().map(CopyTransfer::getCopyId).toList();
+            List<Long> copyTransferResponses =
+                    copyTransfers.stream().map(CopyTransfer::getCopyId).toList();
 
             transferResponse.setCopies(copyTransferResponses);
         });
@@ -74,7 +74,8 @@ public class TransferService {
         // get its copies
         List<CopyTransfer> copyTransfers = copyTransferRepository.findAllByTransferId(transferResponse.getId());
         // map to long
-        List<Long> copyTransferResponses = copyTransfers.stream().map(CopyTransfer::getCopyId).toList();
+        List<Long> copyTransferResponses =
+                copyTransfers.stream().map(CopyTransfer::getCopyId).toList();
         // set the list
         transferResponse.setCopies(copyTransferResponses);
         return transferResponse;
@@ -83,7 +84,7 @@ public class TransferService {
     public TransferResponse create(TransferCreationRequest transferCreationRequest) {
         Transfer transfer = transferMapper.toTransfer(transferCreationRequest);
 
-        if(transferCreationRequest.getCreatedDate() == null) {
+        if (transferCreationRequest.getCreatedDate() == null) {
             transfer.setCreatedDate(Timestamp.from(Instant.now()));
         }
 
@@ -129,7 +130,7 @@ public class TransferService {
 
         // add copy to transfer
         // validate the existence of copy
-        if(!copyRepository.existsById(addCopyToTransferRequest.getCopyId())) {
+        if (!copyRepository.existsById(addCopyToTransferRequest.getCopyId())) {
             throw new AppException(ErrorCode.COPY_NOTFOUND);
         }
 
@@ -145,7 +146,8 @@ public class TransferService {
         TransferResponse transferResponse = transferMapper.toTransferResponse(transfer);
 
         // map to copy id list
-        transferResponse.setCopies(copyTransfers.stream().map(CopyTransfer::getCopyId).toList());
+        transferResponse.setCopies(
+                copyTransfers.stream().map(CopyTransfer::getCopyId).toList());
 
         return transferResponse;
     }

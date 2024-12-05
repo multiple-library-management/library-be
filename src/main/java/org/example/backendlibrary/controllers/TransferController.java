@@ -51,7 +51,6 @@ public class TransferController {
                 .success(true)
                 .data(transferService.addCopyToTransfer(id, addCopyToTransferRequest))
                 .build();
-
     }
 
     @PutMapping("/{id}")
