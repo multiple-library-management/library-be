@@ -36,17 +36,20 @@ public class GenreController {
     }
 
     @PostMapping
-    public Response<Void> createGenre(@RequestBody @Valid GenreCreationRequest genreCreationRequest) {
-        genreService.create(genreCreationRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<GenreResponse> createGenre(@RequestBody @Valid GenreCreationRequest genreCreationRequest) {
+        return Response.<GenreResponse>builder()
+                .success(true)
+                .data(genreService.create(genreCreationRequest))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateGenre(@RequestBody GenreUpdateRequest genreUpdateRequest, @PathVariable Long id) {
-        genreService.update(id, genreUpdateRequest);
+    public Response<GenreResponse> updateGenre(@RequestBody GenreUpdateRequest genreUpdateRequest, @PathVariable Long id) {
 
-        return Response.<Void>builder().success(true).build();
+        return Response.<GenreResponse>builder()
+                .success(true)
+                .data(genreService.update(id, genreUpdateRequest))
+                .build();
     }
 
     @DeleteMapping("/{id}")

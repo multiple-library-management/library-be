@@ -95,10 +95,11 @@ public class EmployeeService {
         return employeeResponse;
     }
 
-    public void create(EmployeeCreationRequest employeeCreationRequest) {
+    public EmployeeResponse create(EmployeeCreationRequest employeeCreationRequest) {
         Employee employee = employeeMapper.toEmployee(employeeCreationRequest);
 
         Long employeeId = employeeRepository.save(employee);
+        employee.setId(employeeId);
 
         if (employeeCreationRequest.getType().equalsIgnoreCase("librarian")) {
             // Check if the library is present
@@ -123,9 +124,11 @@ public class EmployeeService {
                             .warehouseId(employeeCreationRequest.getWarehouseId())
                     .build());
         }
+
+        return employeeMapper.toEmployeeResponse(employee);
     }
 
-    public void update(long id, EmployeeUpdateRequest employeeUpdateRequest) {
+    public EmployeeResponse update(long id, EmployeeUpdateRequest employeeUpdateRequest) {
         Optional<Employee> optionalEmployee = Optional.ofNullable(employeeRepository.findById(id));
 
         if (optionalEmployee.isEmpty()) {
@@ -183,6 +186,8 @@ public class EmployeeService {
 
             warehouseStaffRepository.save(warehouseStaff);
         }
+
+        return employeeMapper.toEmployeeResponse(employee);
     }
 
     public void delete(Long id) {

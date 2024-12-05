@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class GenreRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public Integer save(Genre genre) {
+    public Long save(Genre genre) {
         String sql = """
 				INSERT INTO genres (name)
 				VALUES (?)
@@ -24,7 +24,7 @@ public class GenreRepository {
 
         //        System.out.println("Genre name " + genre.getName());
 
-        return jdbcTemplate.queryForObject(sql, new Object[] {genre.getName()}, Integer.class);
+        return jdbcTemplate.queryForObject(sql, new Object[] {genre.getName()}, Long.class);
     }
 
     public Genre findById(Long id) {
@@ -60,7 +60,7 @@ public class GenreRepository {
         String sql = """
 				SELECT *
 				FROM genres
-				WHERE name = ?;
+				WHERE LOWER(name) = LOWER(?);
 				""";
 
         //        System.out.println("name: " + name);

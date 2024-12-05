@@ -289,8 +289,8 @@ INSERT INTO document_authors (document_id, author_name) VALUES
 
 
 ------------members--------------
-ALTER TABLE members
-DROP COLUMN salary;
+-- ALTER TABLE members
+-- DROP COLUMN salary;
 
 DELETE FROM members;
 INSERT INTO members (first_name, last_name, address, street, ward, district, city, phone, email, is_banned) VALUES

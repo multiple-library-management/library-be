@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class DocumentRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public int save(Document document) {
+    public long save(Document document) {
         String sql =
                 """
 				INSERT INTO documents (title, language, image, price, publisher_name, document_type, volume, frequency, edition)
@@ -25,7 +25,7 @@ public class DocumentRepository {
 
         return jdbcTemplate.queryForObject(
                 sql,
-                Integer.class,
+                Long.class,
                 document.getTitle(),
                 document.getLanguage(),
                 document.getImage(),

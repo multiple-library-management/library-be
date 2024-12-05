@@ -152,12 +152,12 @@ CREATE TABLE IF NOT EXISTS "orders" (
     CONSTRAINT fk_warehouse 
     	FOREIGN KEY (warehouse_id) 
     		REFERENCES warehouses (id)
-				ON DELETE RESTRICT,
+				ON DELETE SET NULL,
     		
     CONSTRAINT fk_warehouse_staff 
     	FOREIGN KEY (warehouse_staff_id) 
     		REFERENCES warehouse_staffs (id)
-				ON DELETE RESTRICT,
+				ON DELETE SET NULL,
     		
     PRIMARY KEY (id)
 );
@@ -210,9 +210,9 @@ CREATE TABLE IF NOT EXISTS workshifts (
     CONSTRAINT fk_employee
     	FOREIGN KEY (employee_id)
     		REFERENCES employees (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     
-    PRIMARY KEY (id, employee_id, date)
+    PRIMARY KEY (id)
 );
 
 
@@ -229,7 +229,6 @@ CREATE TABLE IF NOT EXISTS "members" (
     city VARCHAR(50) NOT NULL,
     phone VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    salary INTEGER NOT NULL,
     
     is_banned boolean not null default false,
     
@@ -274,12 +273,12 @@ CREATE TABLE IF NOT EXISTS copy_transfers (
     CONSTRAINT fk_copy 
     	FOREIGN KEY (copy_id) 
     		REFERENCES copies (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
     CONSTRAINT fk_transfer 
     	FOREIGN KEY (transfer_id) 
     		REFERENCES transfers (id)
-				ON DELETE RESTRICT,
+				ON DELETE CASCADE,
     		
     PRIMARY KEY (copy_id, transfer_id)
 );

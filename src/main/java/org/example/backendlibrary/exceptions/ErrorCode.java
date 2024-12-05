@@ -12,7 +12,13 @@ public enum ErrorCode {
     GENRE_NOTFOUND(1001, "Genre not found", HttpStatus.BAD_REQUEST),
     LIBRARY_NOTFOUND(1001, "Library not found", HttpStatus.BAD_REQUEST),
     EMPLOYEE_NOTFOUND(1001, "Employee not found", HttpStatus.BAD_REQUEST),
-    WAREHOUSE_NOTFOUND(1001, "Warehouse not found", HttpStatus.BAD_REQUEST);
+    WAREHOUSE_NOTFOUND(1001, "Warehouse not found", HttpStatus.BAD_REQUEST),
+    ORDER_NOTFOUND(1001, "Order not found", HttpStatus.BAD_REQUEST),
+    COPY_NOTFOUND(1001, "Copy not found", HttpStatus.BAD_REQUEST),
+    WORKSHIFT_NOTFOUND(1001, "Workshift not found", HttpStatus.BAD_REQUEST),
+    MEMBER_NOTFOUND(1001, "Member not found", HttpStatus.BAD_REQUEST)
+
+    ;
 
     private final int code;
     private final String message;

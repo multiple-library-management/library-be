@@ -47,13 +47,16 @@ public class GenreService {
         return genreMapper.toGenreResponse(optionalGenre.get());
     }
 
-    public void create(GenreCreationRequest genreCreationRequest) {
+    public GenreResponse create(GenreCreationRequest genreCreationRequest) {
         Genre genre = genreMapper.toGenre(genreCreationRequest);
 
-        genreRepository.save(genre);
+        long genreId = genreRepository.save(genre);
+        genre.setId(genreId);
+
+        return genreMapper.toGenreResponse(genre);
     }
 
-    public void update(long id, GenreUpdateRequest genreUpdateRequest) {
+    public GenreResponse update(long id, GenreUpdateRequest genreUpdateRequest) {
         Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findById(id));
 
         if (optionalGenre.isEmpty()) {
@@ -65,6 +68,8 @@ public class GenreService {
         genreMapper.updateGenre(genre, genreUpdateRequest);
 
         genreRepository.update(genre);
+
+        return genreMapper.toGenreResponse(genre);
     }
 
     public void delete(Long id) {

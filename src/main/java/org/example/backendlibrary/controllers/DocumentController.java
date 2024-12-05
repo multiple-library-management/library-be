@@ -36,18 +36,20 @@ public class DocumentController {
     }
 
     @PostMapping
-    public Response<Void> createDocument(@RequestBody @Valid DocumentCreationRequest documentCreationRequest) {
-        documentService.create(documentCreationRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<DocumentResponse> createDocument(@RequestBody @Valid DocumentCreationRequest documentCreationRequest) {
+        return Response.<DocumentResponse>builder()
+                .success(true)
+                .data(documentService.create(documentCreationRequest))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateDocument(
+    public Response<DocumentResponse> updateDocument(
             @RequestBody DocumentUpdateRequest documentUpdateRequest, @PathVariable Long id) {
-        documentService.update(id, documentUpdateRequest);
-
-        return Response.<Void>builder().success(true).build();
+        return Response.<DocumentResponse>builder()
+                .success(true)
+                .data(documentService.update(id, documentUpdateRequest))
+                .build();
     }
 
     @DeleteMapping("/{id}")

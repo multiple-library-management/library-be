@@ -71,10 +71,11 @@ public class DocumentService {
         return documentMapper.toDocumentResponse(document);
     }
 
-    public void create(DocumentCreationRequest documentCreationRequest) {
+    public DocumentResponse create(DocumentCreationRequest documentCreationRequest) {
         Document document = documentMapper.toDocument(documentCreationRequest);
 
-        int documentId = documentRepository.save(document);
+        long documentId = documentRepository.save(document);
+        document.setId(documentId);
 
         document.getAuthors().forEach(author -> {
             //            log.error("author name: {}", author);
@@ -84,17 +85,19 @@ public class DocumentService {
         document.getGenres().forEach(genre -> {
             Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findByName(genre));
             if (optionalGenre.isEmpty()) {
-                int genreId = genreRepository.save(Genre.builder().name(genre).build());
-                documentGenresRepository.addGenreToDocument((long) documentId, (long) genreId);
+                long genreId = genreRepository.save(Genre.builder().name(genre).build());
+                documentGenresRepository.addGenreToDocument(documentId,genreId);
                 return;
             }
 
             documentGenresRepository.addGenreToDocument(
-                    (long) documentId, optionalGenre.get().getId());
+                    documentId, optionalGenre.get().getId());
         });
+
+        return documentMapper.toDocumentResponse(document);
     }
 
-    public void update(long id, DocumentUpdateRequest documentUpdateRequest) {
+    public DocumentResponse update(long id, DocumentUpdateRequest documentUpdateRequest) {
         Optional<Document> optionalDocument = Optional.ofNullable(documentRepository.findById(id));
 
         if (optionalDocument.isEmpty()) {
@@ -116,13 +119,15 @@ public class DocumentService {
         document.getGenres().forEach(genre -> {
             Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findByName(genre));
             if (optionalGenre.isEmpty()) {
-                int genreId = genreRepository.save(Genre.builder().name(genre).build());
-                documentGenresRepository.addGenreToDocument(id, (long) genreId);
+                long genreId = genreRepository.save(Genre.builder().name(genre).build());
+                documentGenresRepository.addGenreToDocument(id, genreId);
                 return;
             }
 
             documentGenresRepository.addGenreToDocument(id, optionalGenre.get().getId());
         });
+
+        return documentMapper.toDocumentResponse(document);
     }
 
     public void delete(Long id) {

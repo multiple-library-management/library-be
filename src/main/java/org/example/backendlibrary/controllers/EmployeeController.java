@@ -36,17 +36,19 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Response<Void> createEmployee(@RequestBody @Valid EmployeeCreationRequest employeeCreationRequest) {
-        employeeService.create(employeeCreationRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<EmployeeResponse> createEmployee(@RequestBody @Valid EmployeeCreationRequest employeeCreationRequest) {
+        return Response.<EmployeeResponse>builder()
+                .success(true)
+                .data(employeeService.create(employeeCreationRequest))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateEmployee(@RequestBody EmployeeUpdateRequest employeeUpdateRequest, @PathVariable Long id) {
-        employeeService.update(id, employeeUpdateRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<EmployeeResponse> updateEmployee(@RequestBody EmployeeUpdateRequest employeeUpdateRequest, @PathVariable Long id) {
+        return Response.<EmployeeResponse>builder()
+                .success(true)
+                .data(employeeService.update(id, employeeUpdateRequest))
+                .build();
     }
 
     @DeleteMapping("/{id}")

@@ -38,17 +38,19 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public Response<Void> createGenre(@RequestBody @Valid WarehouseCreationRequest warehouseCreationRequest) {
-        warehouseService.create(warehouseCreationRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<WarehouseResponse> createGenre(@RequestBody @Valid WarehouseCreationRequest warehouseCreationRequest) {
+        return Response.<WarehouseResponse>builder()
+                .success(true)
+                .data(warehouseService.create(warehouseCreationRequest))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateGenre(@RequestBody WarehouseUpdateRequest warehouseUpdateRequest, @PathVariable Long id) {
-        warehouseService.update(id, warehouseUpdateRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<WarehouseResponse> updateGenre(@RequestBody WarehouseUpdateRequest warehouseUpdateRequest, @PathVariable Long id) {
+        return Response.<WarehouseResponse>builder()
+                .success(true)
+                .data(warehouseService.update(id, warehouseUpdateRequest))
+                .build();
     }
 
     @DeleteMapping("/{id}")

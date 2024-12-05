@@ -48,13 +48,16 @@ public class LibraryService {
         return libraryMapper.toLibraryResponse(optionalLibrary.get());
     }
 
-    public void create(LibraryCreationRequest libraryCreationRequest) {
+    public LibraryResponse create(LibraryCreationRequest libraryCreationRequest) {
         Library library = libraryMapper.toLibrary(libraryCreationRequest);
 
-        libraryRepository.save(library);
+        long libraryId = libraryRepository.save(library);
+        library.setId(libraryId);
+
+        return libraryMapper.toLibraryResponse(library);
     }
 
-    public void update(long id, LibraryUpdateRequest libraryUpdateRequest) {
+    public LibraryResponse update(long id, LibraryUpdateRequest libraryUpdateRequest) {
         Optional<Library> optionalLibrary = Optional.ofNullable(libraryRepository.findById(id));
 
         if (optionalLibrary.isEmpty()) {
@@ -66,6 +69,8 @@ public class LibraryService {
         libraryMapper.updateLibrary(library, libraryUpdateRequest);
 
         libraryRepository.update(library);
+
+        return libraryMapper.toLibraryResponse(library);
     }
 
     public void delete(Long id) {

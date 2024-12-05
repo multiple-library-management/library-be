@@ -53,13 +53,16 @@ public class WarehouseService {
         return warehouseMapper.toWarehouseResponse(optionalWarehouse.get());
     }
 
-    public void create(WarehouseCreationRequest warehouseCreationRequest) {
+    public WarehouseResponse create(WarehouseCreationRequest warehouseCreationRequest) {
         Warehouse warehouse = warehouseMapper.toWarehouse(warehouseCreationRequest);
 
-        warehouseRepository.save(warehouse);
+        long warehouseId = warehouseRepository.save(warehouse);
+        warehouse.setId(warehouseId);
+
+        return warehouseMapper.toWarehouseResponse(warehouse);
     }
 
-    public void update(long id, WarehouseUpdateRequest warehouseUpdateRequest) {
+    public WarehouseResponse update(long id, WarehouseUpdateRequest warehouseUpdateRequest) {
         Optional<Warehouse> optionalWarehouse = Optional.ofNullable(warehouseRepository.findById(id));
 
         if (optionalWarehouse.isEmpty()) {
@@ -71,6 +74,8 @@ public class WarehouseService {
         warehouseMapper.updateWarehouse(warehouse, warehouseUpdateRequest);
 
         warehouseRepository.update(warehouse);
+
+        return warehouseMapper.toWarehouseResponse(warehouse);
     }
 
     public void delete(Long id) {

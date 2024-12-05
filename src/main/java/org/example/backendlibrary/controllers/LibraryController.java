@@ -36,17 +36,19 @@ public class LibraryController {
     }
 
     @PostMapping
-    public Response<Void> createGenre(@RequestBody @Valid LibraryCreationRequest libraryCreationRequest) {
-        libraryService.create(libraryCreationRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<LibraryResponse> createGenre(@RequestBody @Valid LibraryCreationRequest libraryCreationRequest) {
+        return Response.<LibraryResponse>builder()
+                .success(true)
+                .data(libraryService.create(libraryCreationRequest))
+                .build();
     }
 
     @PutMapping("/{id}")
-    public Response<Void> updateGenre(@RequestBody LibraryUpdateRequest libraryUpdateRequest, @PathVariable Long id) {
-        libraryService.update(id, libraryUpdateRequest);
-
-        return Response.<Void>builder().success(true).build();
+    public Response<LibraryResponse> updateGenre(@RequestBody LibraryUpdateRequest libraryUpdateRequest, @PathVariable Long id) {
+        return Response.<LibraryResponse>builder()
+                .success(true)
+                .data(libraryService.update(id, libraryUpdateRequest))
+                .build();
     }
 
     @DeleteMapping("/{id}")
