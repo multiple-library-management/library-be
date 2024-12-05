@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .message(ex.getMessage())
                 .build();
 
         Response<Void> response =

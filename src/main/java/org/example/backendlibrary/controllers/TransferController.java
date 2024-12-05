@@ -2,6 +2,7 @@ package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
 
+import org.example.backendlibrary.dtos.requests.AddCopyToTransferRequest;
 import org.example.backendlibrary.dtos.requests.TransferCreationRequest;
 import org.example.backendlibrary.dtos.requests.TransferUpdateRequest;
 import org.example.backendlibrary.dtos.responses.PageResponse;
@@ -41,6 +42,16 @@ public class TransferController {
                 .success(true)
                 .data(transferService.create(transferCreationRequest))
                 .build();
+    }
+
+    @PostMapping("/{id}")
+    public Response<TransferResponse> updateGenre(
+            @PathVariable Long id, @RequestBody @Valid AddCopyToTransferRequest addCopyToTransferRequest) {
+        return Response.<TransferResponse>builder()
+                .success(true)
+                .data(transferService.addCopyToTransfer(id, addCopyToTransferRequest))
+                .build();
+
     }
 
     @PutMapping("/{id}")

@@ -105,6 +105,8 @@ public class BorrowTicketService {
         // get borrow ticket reponse
         BorrowTicketResponse borrowTicketResponse =
                 borrowTicketMapper.toBorrowTicketResponse(borrowTicketRepository.findById(borrowTicketId));
+
+        // get current list of copies borrowed in the ticket
         List<CopyBorrowTicket> copyBorrowTickets = copyBorrowTicketRepository.findAllByBorrowTicketId(borrowTicketId);
 
         // save the copy want to borrow

@@ -34,9 +34,8 @@ public class CopyBorrowTicketRepository {
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 				""";
 
-        jdbcTemplate.queryForObject(
+        jdbcTemplate.update(
                 sql,
-                Long.class,
                 copyBorrowTicket.getStartDate(),
                 copyBorrowTicket.getEndDate(),
                 copyBorrowTicket.getReturnDate(),
@@ -118,7 +117,7 @@ public class CopyBorrowTicketRepository {
         String sql =
                 """
 				SELECT COUNT(*)
-				FROM borrow_tickets
+				FROM copy_borrow_tickets
 				WHERE copy_id = ? AND borrow_ticket_id = ?;
 				""";
         // Execute the query and check if the count is greater than 0

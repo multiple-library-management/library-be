@@ -1,6 +1,7 @@
 package org.example.backendlibrary.dtos.requests;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.*;
 
@@ -10,8 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransferCreationRequest {
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Timestamp createdDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
     private Integer amount;
     private String type;

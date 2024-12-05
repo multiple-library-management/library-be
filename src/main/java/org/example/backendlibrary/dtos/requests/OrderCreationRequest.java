@@ -1,6 +1,6 @@
 package org.example.backendlibrary.dtos.requests;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +10,9 @@ import lombok.Setter;
 @Setter
 @Builder
 public class OrderCreationRequest {
-    private LocalDateTime shipStartDate;
-    private LocalDateTime shipEndDate;
+    private Timestamp createdDate;
+    private Timestamp shipStartDate;
+    private Timestamp shipEndDate;
 
     private Integer warehouseId;
     private Integer warehouseStaffId;

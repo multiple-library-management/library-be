@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS librarians (
     REFERENCES libraries (id)
 	ON DELETE CASCADE,
     		
-    PRIMARY KEY (id)
+    PRIMARY KEY (employee_id)
 );
 
 CREATE TABLE IF NOT EXISTS warehouses (
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS "orders" (
     		
     CONSTRAINT fk_warehouse_staff 
     FOREIGN KEY (warehouse_staff_id) 
-    REFERENCES warehouse_staffs (id)
+    REFERENCES warehouse_staffs (employee_id)
 	ON DELETE SET NULL,
     		
     PRIMARY KEY (id)
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS transfers (
     		
     CONSTRAINT fk_warehouse_staff 
     FOREIGN KEY (warehouse_staff_id) 
-    REFERENCES warehouse_staffs (id)
+    REFERENCES warehouse_staffs (employee_id)
 	ON DELETE CASCADE,
     		
     PRIMARY KEY (id)
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS borrow_tickets (
     		
     CONSTRAINT fk_librarian 
     FOREIGN KEY (librarian_id) 
-    REFERENCES librarians (id)
+    REFERENCES librarians (employee_id)
 	ON DELETE CASCADE,
     		
     PRIMARY KEY (id)

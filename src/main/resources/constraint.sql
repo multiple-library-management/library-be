@@ -28,7 +28,7 @@ BEGIN
         SELECT 1
         FROM copies c
         WHERE c.id = NEW.copy_id
-          AND c.status = 'lost'
+          AND (c.status <> 'available')
     ) THEN
         -- Raise an exception if the copy is marked as lost
         RAISE EXCEPTION 'The copy with ID % is lost and cannot be borrowed.', NEW.copy_id;
@@ -39,31 +39,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER prevent_borrowing_lost_copy_trigger
+CREATE OR REPLACE TRIGGER prevent_borrowing_lost_copy_trigger
 BEFORE INSERT ON copy_borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_borrowing_lost_copy();
 
 ----------------------------------------------------- EACH MEMBER IS ALLOWED TO BORROW 2 COPIES  -----------------------------------------------------
 CREATE OR REPLACE FUNCTION prevent_exceeding_borrow_limit()
-    RETURNS TRIGGER AS $$
+RETURNS TRIGGER AS $$
 BEGIN
-    -- Check the number of active borrow tickets for the same Member_ID
+    -- Check how many copies are already associated with the borrow ticket
     IF (SELECT COUNT(*)
         FROM copy_borrow_tickets cbt
-                 JOIN borrow_tickets bt ON cbt.borrow_ticket_id = bt.id
-        WHERE bt.member_id = NEW.member_id
-          AND cbt.return_date IS NULL) >= 2 THEN
-        -- Raise an exception if the member already has 2 active borrow tickets
-        RAISE EXCEPTION 'Member % cannot borrow more than 2 copies at a time.', NEW.member_id;
+        WHERE cbt.borrow_ticket_id = NEW.borrow_ticket_id) >= 2 THEN
+        -- Raise an exception if the member is trying to borrow more than 2 copies in this borrow ticket
+        RAISE EXCEPTION 'Member % cannot borrow more than 2 copies in a single borrow ticket.', 
+            (SELECT member_id FROM borrow_tickets WHERE id = NEW.borrow_ticket_id);
     END IF;
 
-    -- Allow the operation to proceed if the member has borrowed fewer than 2 copies
+    -- Allow the operation to proceed if the member has borrowed fewer than 2 copies in this borrow ticket
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER prevent_exceeding_borrow_limit_trigger
+
+CREATE OR REPLACE TRIGGER prevent_exceeding_borrow_limit_trigger
 BEFORE INSERT ON copy_borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_exceeding_borrow_limit();
@@ -77,21 +77,20 @@ BEGIN
         SELECT 1
         FROM copy_borrow_tickets cbt
         JOIN borrow_tickets bt ON cbt.borrow_ticket_id = bt.id
-        WHERE bt.member_id = NEW.member_id
+        WHERE bt.member_id = (SELECT member_id FROM borrow_tickets WHERE id = NEW.borrow_ticket_id)
           AND cbt.return_date IS NULL
           AND cbt.borrow_ticket_id != NEW.borrow_ticket_id -- Exclude the current ticket being inserted
     ) THEN
         -- Raise an exception if such a ticket is found
-        RAISE EXCEPTION 'Member % already has an active borrow ticket (Return_Date is NULL).', NEW.Member_ID;
+        RAISE EXCEPTION 'Member already has an active borrow ticket (Return_Date is NULL).';
     END IF;
 
     RETURN NEW; -- Allow the operation to proceed if the condition is not violated
 END;
 $$ LANGUAGE plpgsql;
 
-
-create or replace TRIGGER before_insert_check_active_borrow_ticket
-BEFORE INSERT ON borrow_tickets
+CREATE OR REPLACE TRIGGER before_insert_check_active_borrow_ticket
+BEFORE INSERT ON copy_borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_multiple_active_tickets();
 
@@ -110,56 +109,55 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_copy_status_borrowing_trigger
+CREATE OR REPLACE TRIGGER set_copy_status_borrowing_trigger
 BEFORE INSERT ON copy_borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION set_copy_status_borrowing();
 
------------------------------------------------------ RESETTING STATUS WHEN THE COPY IS RETURNED  -----------------------------------------------------
-CREATE OR REPLACE FUNCTION reset_copy_status_on_return()
-    RETURNS TRIGGER AS $$
-BEGIN
-    -- Reset the status of the copy to 'available' when the book is returned
-    IF NEW.return_date IS NOT NULL THEN
-        UPDATE copies
-        SET status = 'available'  -- or any other status that fits your model
-        WHERE id = NEW.copy_id;
-    END IF;
+----------------------------------------------------- IF MEMBER DO NOT RETURN AFTER 30 DAYS THEY WILL BE BANNED, AND THE BOOK IS MARKED TO LOST  -----------------------------------------------------
 
-    -- Return the updated row (standard behavior for an AFTER UPDATE trigger)
-    RETURN NEW;
+-- SELECT cron.schedule(
+--     'check_overdue_borrowed_books',
+--     '0 0 * * 0', -- Every Sunday at midnight
+--     $$
+--         -- Ban members who have overdue borrowed books
+--         UPDATE members m
+--         SET is_banned = true
+--         FROM borrow_tickets bt
+--         JOIN copy_borrow_tickets cbt ON bt.id = cbt.borrow_ticket_id
+--         WHERE m.id = bt.member_id
+--           AND cbt.return_date IS NULL  -- Book is not yet returned
+--           AND current_date > (cbt.end_date + INTERVAL '30 days');
+
+--         -- Mark copies as 'lost' for overdue books
+--         UPDATE copies c
+--         SET status = 'lost'
+--         FROM copy_borrow_tickets cbt
+--         WHERE c.id = cbt.copy_id
+--           AND cbt.return_date IS NULL  -- Book is not yet returned
+--           AND current_date > (cbt.end_date + INTERVAL '30 days');
+--     $$
+-- );
+
+----------------------------------------------------- SET COPY STATUS TO BORROWING -----------------------------------------------------
+
+
+CREATE OR REPLACE FUNCTION set_copy_status_to_borrowing()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the copy status to 'borrowing' when a new copy_borrow_tickets entry is created
+    UPDATE copies
+    SET status = 'borrowing'
+    WHERE id = NEW.copy_id;
+
+    RETURN NEW; -- Return the new row to allow the insert to continue
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER reset_copy_status_on_return_trigger
-AFTER UPDATE ON copy_borrow_tickets
+CREATE OR REPLACE TRIGGER after_insert_set_copy_status_borrowing
+AFTER INSERT ON copy_borrow_tickets
 FOR EACH ROW
-EXECUTE FUNCTION reset_copy_status_on_return();
-
------------------------------------------------------ IF MEMBER DO NOT RETURN AFTER 30 DAYS THEY WILL BE BANNED, AND THE BOOK IS MARKED TO LOST  -----------------------------------------------------
-
-SELECT cron.schedule(
-    'check_overdue_borrowed_books',
-    '0 0 * * 0', -- Every Sunday at midnight
-    $$
-        -- Ban members who have overdue borrowed books
-        UPDATE members m
-        SET is_banned = true
-        FROM borrow_tickets bt
-        JOIN copy_borrow_tickets cbt ON bt.id = cbt.borrow_ticket_id
-        WHERE m.id = bt.member_id
-          AND cbt.return_date IS NULL  -- Book is not yet returned
-          AND current_date > (cbt.end_date + INTERVAL '30 days');
-
-        -- Mark copies as 'lost' for overdue books
-        UPDATE copies c
-        SET status = 'lost'
-        FROM copy_borrow_tickets cbt
-        WHERE c.id = cbt.copy_id
-          AND cbt.return_date IS NULL  -- Book is not yet returned
-          AND current_date > (cbt.end_date + INTERVAL '30 days');
-    $$
-);
+EXECUTE FUNCTION set_copy_status_to_borrowing();
 
 
 
@@ -195,20 +193,17 @@ RETURNS TRIGGER AS $$
 DECLARE
     available_count INTEGER;
     l_id INTEGER;
+    doc_id INTEGER;
 BEGIN
-    -- Get the library_id of the copy being borrowed
-    SELECT library_id INTO l_id
+    -- Get the library_id and document_id of the copy being borrowed
+    SELECT library_id, document_id INTO l_id, doc_id
     FROM copies
     WHERE id = NEW.copy_id;
 
     -- Count the number of available copies of the same document in the library
     SELECT COUNT(*) INTO available_count
     FROM copies
-    WHERE document_id = (
-            SELECT document_id
-            FROM copies
-            WHERE id = NEW.copy_id
-        )
+    WHERE document_id = doc_id
       AND library_id = l_id
       AND status = 'available';
 
@@ -217,24 +212,108 @@ BEGIN
         RAISE EXCEPTION 'Cannot borrow this document. The number of available copies in the library is below 10.';
     END IF;
 
-    -- Ensure the copy being borrowed is available
---    IF (
---        SELECT status
---        FROM copy
---        WHERE id = NEW.copy_id
---    ) <> 'available' THEN
---        RAISE EXCEPTION 'Cannot borrow this copy. It is not available for borrowing.';
---    END IF;
+    -- Ensure the specific copy being borrowed is available
+    IF (SELECT status FROM copies WHERE id = NEW.copy_id) <> 'available' THEN
+        RAISE EXCEPTION 'Cannot borrow this copy. It is not available for borrowing.';
+    END IF;
 
     -- Allow the borrowing operation
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER before_insert_update_check_copy_availability
-BEFORE INSERT ON borrow_tickets
+CREATE OR REPLACE TRIGGER before_insert_check_copy_availability
+BEFORE INSERT ON copy_borrow_tickets
 FOR EACH ROW
 EXECUTE FUNCTION prevent_borrowing_if_low_stock();
+
+----------------------------------------------------- AUTOMATICALLY UPDATE THE AMOUNT OF TRANSFER -----------------------------------------------------
+CREATE OR REPLACE FUNCTION update_transfer_amount()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the amount field in the transfers table based on the number of copies in the copy_transfers table
+    UPDATE transfers
+    SET amount = (
+        SELECT COUNT(*)
+        FROM copy_transfers
+        WHERE transfer_id = NEW.transfer_id
+    )
+    WHERE id = NEW.transfer_id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER after_insert_update_transfer_amount
+AFTER INSERT ON copy_transfers
+FOR EACH ROW
+EXECUTE FUNCTION update_transfer_amount();
+
+----------------------------------------------------- UPDATE THE COPY LIBRARY ID AND WAREHOUSE ID -----------------------------------------------------
+CREATE OR REPLACE FUNCTION update_copy_library_warehouse()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Get the type of the transfer by joining the transfers table
+    DECLARE
+        transfer_type VARCHAR(50);
+    BEGIN
+        -- Retrieve the transfer type from the transfers table
+        SELECT type INTO transfer_type
+        FROM transfers
+        WHERE id = NEW.transfer_id;
+
+        -- Handle the case when the transfer type is 'export'
+        IF transfer_type = 'export' THEN
+            -- Ensure the copy is currently in a library (i.e., library_id is not NULL and warehouse_id is NULL)
+            IF EXISTS (
+                SELECT 1
+                FROM copies
+                WHERE id = NEW.copy_id
+                AND library_id IS NOT NULL
+                AND warehouse_id IS NULL
+            ) THEN
+                -- Perform export: set library_id to NULL and warehouse_id to the transfer's warehouse_id
+                UPDATE copies
+                SET library_id = NULL,
+                    warehouse_id = (SELECT warehouse_id FROM transfers WHERE id = NEW.transfer_id)
+                WHERE id = NEW.copy_id;
+            ELSE
+                -- Raise an exception if the copy is not in a library or already in a warehouse
+                RAISE EXCEPTION 'Cannot export copies that are not in a library or are already in a warehouse.';
+            END IF;
+
+        -- Handle the case when the transfer type is 'import'
+        ELSIF transfer_type = 'import' THEN
+            -- Ensure the copy is currently in a warehouse (i.e., warehouse_id is not NULL and library_id is NULL)
+            IF EXISTS (
+                SELECT 1
+                FROM copies
+                WHERE id = NEW.copy_id
+                AND warehouse_id IS NOT NULL
+                AND library_id IS NULL
+            ) THEN
+                -- Perform import: set warehouse_id to NULL and library_id to the transfer's library_id
+                UPDATE copies
+                SET warehouse_id = NULL,
+                    library_id = (SELECT library_id FROM transfers WHERE id = NEW.transfer_id)
+                WHERE id = NEW.copy_id;
+            ELSE
+                -- Raise an exception if the copy is not in a warehouse or already in a library
+                RAISE EXCEPTION 'Cannot import copies that are not in a warehouse or are already in a library.';
+            END IF;
+        END IF;
+
+        -- Return the new row for the trigger
+        RETURN NEW;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE TRIGGER after_insert_update_copy_library_warehouse
+AFTER INSERT ON copy_transfers
+FOR EACH ROW
+EXECUTE FUNCTION update_copy_library_warehouse();
 
 
 

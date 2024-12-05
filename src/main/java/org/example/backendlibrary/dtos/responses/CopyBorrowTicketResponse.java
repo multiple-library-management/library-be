@@ -1,6 +1,6 @@
 package org.example.backendlibrary.dtos.responses;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import lombok.*;
 
