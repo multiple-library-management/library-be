@@ -1,4 +1,7 @@
 --------------liraries----------------
+DELETE FROM libraries;
+SELECT setval(pg_get_serial_sequence('libraries', 'id'), 1, false);
+
 INSERT INTO libraries ("name", address, district, ward, street, city)
 VALUES
 ('Thư viện Trường Đại học Khoa học Tự nhiên TP.HCM', '227 Nguyễn Văn Cừ', 'Quận 5', 'Phường 4', 'Nguyễn Văn Cừ', 'TP.HCM'),
@@ -11,7 +14,7 @@ VALUES
 
 --------- documents--------------
 DELETE FROM documents;
--- SELECT setval(pg_get_serial_sequence('documents', 'id'), 1, false);
+SELECT setval(pg_get_serial_sequence('documents', 'id'), 1, false);
 -- Thêm dữ liệu sách và tạp chí
 INSERT INTO documents (title, "language", image, price, publisher_name, document_type, volume, frequency, edition)
 VALUES
@@ -293,6 +296,7 @@ INSERT INTO document_authors (document_id, author_name) VALUES
 -- DROP COLUMN salary;
 
 DELETE FROM members;
+SELECT setval(pg_get_serial_sequence('members', 'id'), 1, false);
 INSERT INTO members (first_name, last_name, address, street, ward, district, city, phone, email, is_banned) VALUES
 ('Thanh', 'Nguyễn Văn', '123 Phan Đình Phùng', 'Phan Đình Phùng', 'Phường 1', 'Quận 1', 'Hồ Chí Minh', '0912345678', 'nguyenvanthanh@gmail.com', false),
 ('Bích', 'Trần Thị', '456 Nguyễn Trãi', 'Nguyễn Trãi', 'Phường 2', 'Quận 5', 'Hồ Chí Minh', '0912345679', 'tranthibich@gmail.com', false),
@@ -327,6 +331,7 @@ INSERT INTO members (first_name, last_name, address, street, ward, district, cit
 
 ---------------------- employee------------------------
 DELETE FROM employees;
+SELECT setval(pg_get_serial_sequence('employees', 'id'), 1, false);
 
 INSERT INTO employees (first_name, last_name, address, street, ward, district, city, phone, email, salary) VALUES
 ('Ngọc', 'Lê Minh', '12 Trần Quốc Toản', 'Trần Quốc Toản', 'Phường 1', 'Quận 3', 'Hồ Chí Minh', '0988881111', 'leminhngoc@gmail.com', 18000000),
@@ -349,21 +354,22 @@ INSERT INTO employees (first_name, last_name, address, street, ward, district, c
 
 DELETE FROM librarians;
 
-INSERT INTO librarians (library_id, employee_id) VALUES
+INSERT INTO librarians (employee_id, library_id) VALUES
 (1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(3, 5),
-(3, 6),
-(4, 7),
-(4, 8),
-(5, 9),
-(5, 10),
-(6, 11);
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(7, 4),
+(8, 4),
+(9, 5),
+(10, 5),
+(11, 6);
 
 ----------------warehouse-------------------------------
 DELETE FROM warehouses;
+SELECT setval(pg_get_serial_sequence('warehouses', 'id'), 1, false);
 
 INSERT INTO warehouses ("name", address, district, ward, street, city) VALUES
 ('Bookstore Warehouse 1', '123 Thanh Da', 'Bình Thạnh', 'Phường 14', 'Đường Thanh Đa', 'Hồ Chí Minh'),
@@ -373,12 +379,13 @@ INSERT INTO warehouses ("name", address, district, ward, street, city) VALUES
 ----------------warehouse_staffs--------------------
 DELETE FROM warehouse_staffs;
 
-INSERT INTO warehouse_staffs (warehouse_id, employee_id) VALUES
-(1,12), (1,13),
-(2,14), (2,15);
+INSERT INTO warehouse_staffs (employee_id, warehouse_id) VALUES
+(12,1), (13,1),
+(14,2), (15,2);
 
 ----------------workshift-----------------------
 DELETE FROM workshifts;
+SELECT setval(pg_get_serial_sequence('workshifts', 'id'), 1, false);
 
 INSERT INTO workshifts (date, start_time, end_time, employee_id) VALUES
 -- Monday
@@ -396,9 +403,8 @@ INSERT INTO workshifts (date, start_time, end_time, employee_id) VALUES
 ('2024-12-02', '12:00:00', '17:00:00', 12), -- Employee 12 Afternoon Shift
 ('2024-12-02', '07:00:00', '12:00:00', 13), -- Employee 13 Day Shift
 ('2024-12-02', '12:00:00', '17:00:00', 14), -- Employee 14 Afternoon Shift
-('2024-12-02', '07:00:00', '12:00:00', 15), -- Employee 15 Day Shift
+('2024-12-02', '12:00:00', '17:00:00', 15), -- Employee 15 Day Shift
 
--- Tuesday
 ('2024-12-03', '07:00:00', '12:00:00', 1),  -- Employee 1 Day Shift
 ('2024-12-03', '12:00:00', '17:00:00', 2),  -- Employee 2 Afternoon Shift
 ('2024-12-03', '07:00:00', '12:00:00', 3),  -- Employee 3 Day Shift
@@ -432,23 +438,26 @@ INSERT INTO workshifts (date, start_time, end_time, employee_id) VALUES
 ('2024-12-04', '12:00:00', '17:00:00', 14), -- Employee 14 Afternoon Shift
 ('2024-12-04', '07:00:00', '12:00:00', 15); -- Employee 15 Day Shift
 
+
 -------------------orders--------------------
 DELETE FROM orders;
+SELECT setval(pg_get_serial_sequence('orders', 'id'), 1, false);
 
 INSERT INTO orders (created_date, ship_start_date, ship_end_date, total_price, warehouse_id, warehouse_staff_id) VALUES
-('2023-01-01 10:00:00', '2023-01-02 10:00:00', '2023-01-02 17:00:00', 0, 1, 1),
-('2023-01-02 14:30:00', '2023-01-03 12:00:00', '2023-01-03 17:00:00', 0, 1, 2),
-('2023-01-03 11:00:00', '2023-01-04 13:00:00', '2023-01-04 17:00:00', 0, 1, 2),
-('2023-01-04 09:00:00', '2023-01-05 14:00:00', '2023-01-05 18:00:00', 0, 2, 4),
-('2023-01-05 15:00:00', '2023-01-06 10:00:00', '2023-01-06 20:00:00', 0, 2, 4),
-('2023-01-06 08:30:00', '2023-01-07 11:00:00', '2023-01-07 19:00:00', 0, 2, 3),
-('2023-01-10 08:30:00', '2023-01-12 11:00:00', '2023-01-15 19:00:00', 0, 1, 2),
-('2023-01-12 08:30:00', '2023-01-20 11:00:00', '2023-01-25 19:00:00', 0, 2, 3);
+('2023-01-01 10:00:00', '2023-01-02 10:00:00', '2023-01-02 17:00:00', 0, 1, 12),
+('2023-01-02 14:30:00', '2023-01-03 12:00:00', '2023-01-03 17:00:00', 0, 1, 13),
+('2023-01-03 11:00:00', '2023-01-04 13:00:00', '2023-01-04 17:00:00', 0, 1, 14),
+('2023-01-04 09:00:00', '2023-01-05 14:00:00', '2023-01-05 18:00:00', 0, 2, 15),
+('2023-01-05 15:00:00', '2023-01-06 10:00:00', '2023-01-06 20:00:00', 0, 2, 12),
+('2023-01-06 08:30:00', '2023-01-07 11:00:00', '2023-01-07 19:00:00', 0, 2, 13),
+('2023-01-10 08:30:00', '2023-01-12 11:00:00', '2023-01-15 19:00:00', 0, 1, 14),
+('2023-01-12 08:30:00', '2023-01-20 11:00:00', '2023-01-25 19:00:00', 0, 2, 15);
 
 
 ---------- copies-----------------------------------------
 
 DELETE FROM copies;
+SELECT setval(pg_get_serial_sequence('copies', 'id'), 1, false);
 
 INSERT INTO copies (fee, status, document_id, library_id, warehouse_id, order_id) VALUES
 (5000, 'available', 1, 1, NULL, 1),
@@ -7561,7 +7570,7 @@ INSERT INTO copies (fee, status, document_id, library_id, warehouse_id, order_id
 (5000, 'available', 79, 6, NULL, 6),
 (5000, 'available', 79, 6, NULL, 6),
 (5000, 'available', 79, 6, NULL, 6),
--cs in warehouse----------
+--cs in warehouse----------
 (5000, 'available', 1, NULL, 1 , 7),
 (5000, 'available', 1, NULL, 1 , 7),
 (5000, 'available', 1, NULL, 1 , 7),
@@ -8356,19 +8365,16 @@ INSERT INTO copies (fee, status, document_id, library_id, warehouse_id, order_id
 ------------doctranporting----------
 
 DELETE FROM transfers;
-
+SELECT setval(pg_get_serial_sequence('transfers', 'id'), 1, false);
 
 INSERT INTO transfers (created_date, start_date, end_date, amount, type, library_id, warehouse_id, warehouse_staff_id)
 VALUES
-  ('2024-12-01 10:00:00', '2024-12-02 08:00:00', '2024-12-02 12:00:00', 1185, 'export', 1, 1, 1),
-  ('2024-12-03 14:30:00', '2024-12-04 09:00:00', '2024-12-04 13:00:00', 1185, 'export', 2, 1, 2),
-  ('2024-12-05 11:00:00', '2024-12-06 07:30:00', '2024-12-06 12:30:00', 1185, 'export', 3, 1, 2),
-  ('2024-12-07 09:15:00', '2024-12-08 08:00:00', '2024-12-08 11:45:00', 1185, 'export', 4, 2, 4),
-  ('2024-12-09 13:45:00', '2024-12-10 08:30:00', '2024-12-10 12:30:00', 1185, 'export', 5, 2, 3),
-  ('2024-12-11 10:00:00', '2024-12-12 09:00:00', '2024-12-12 13:00:00', 1185, 'export', 6, 2, 3);
-
-
-
+  ('2024-12-01 10:00:00', '2024-12-02 08:00:00', '2024-12-02 12:00:00', 1185, 'export', 1, 1, 12),
+  ('2024-12-03 14:30:00', '2024-12-04 09:00:00', '2024-12-04 13:00:00', 1185, 'export', 2, 1, 13),
+  ('2024-12-05 11:00:00', '2024-12-06 07:30:00', '2024-12-06 12:30:00', 1185, 'export', 3, 1, 14),
+  ('2024-12-07 09:15:00', '2024-12-08 08:00:00', '2024-12-08 11:45:00', 1185, 'export', 4, 2, 15),
+  ('2024-12-09 13:45:00', '2024-12-10 08:30:00', '2024-12-10 12:30:00', 1185, 'export', 5, 2, 12),
+  ('2024-12-11 10:00:00', '2024-12-12 09:00:00', '2024-12-12 13:00:00', 1185, 'export', 6, 2, 13);
 
 ---- copy transfer-----
 -- select count(*) from copies;

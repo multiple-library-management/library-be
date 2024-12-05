@@ -68,7 +68,7 @@ public class DocumentRepository {
     }
 
     // Update document
-    public int update(Document document) {
+    public void update(Document document) {
         String sql =
                 """
 				UPDATE documents
@@ -77,7 +77,7 @@ public class DocumentRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 document.getTitle(),
                 document.getLanguage(),
@@ -92,12 +92,12 @@ public class DocumentRepository {
     }
 
     // Delete document by ID
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM documents WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

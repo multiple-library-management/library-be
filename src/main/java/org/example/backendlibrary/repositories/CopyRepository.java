@@ -1,14 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Copy;
-import org.example.backendlibrary.entities.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -41,8 +41,7 @@ public class CopyRepository {
                 copy.getDocumentId(),
                 copy.getLibraryId(),
                 copy.getWarehouseId(),
-                copy.getOrderId()
-        );
+                copy.getOrderId());
     }
 
     public List<Copy> findAll(int page, int size) {
@@ -72,7 +71,7 @@ public class CopyRepository {
         }
     }
 
-    public int update(Copy copy) {
+    public void update(Copy copy) {
         String sql =
                 """
 				UPDATE copies
@@ -80,7 +79,7 @@ public class CopyRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 copy.getFee(),
                 copy.getStatus(),
@@ -88,16 +87,15 @@ public class CopyRepository {
                 copy.getLibraryId(),
                 copy.getWarehouseId(),
                 copy.getOrderId(),
-                copy.getId()
-        );
+                copy.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM copies WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

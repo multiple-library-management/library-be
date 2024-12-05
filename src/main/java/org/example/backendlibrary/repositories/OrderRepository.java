@@ -1,12 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,9 +17,9 @@ public class OrderRepository {
 
     private static final RowMapper<Order> ORDER_ROW_MAPPER = (rs, rowNum) -> Order.builder()
             .id(rs.getLong("id"))
-            .createdDate(rs.getTimestamp("created_date").toLocalDateTime())
-            .shipStartDate(rs.getTimestamp("ship_start_date").toLocalDateTime())
-            .shipEndDate(rs.getTimestamp("ship_end_date").toLocalDateTime())
+            .createdDate(rs.getTimestamp("created_date"))
+            .shipStartDate(rs.getTimestamp("ship_start_date"))
+            .shipEndDate(rs.getTimestamp("ship_end_date"))
             .totalPrice(rs.getInt("total_price"))
             .warehouseId(rs.getInt("warehouse_id"))
             .warehouseStaffId(rs.getInt("warehouse_staff_id"))
@@ -39,8 +41,7 @@ public class OrderRepository {
                 order.getShipEndDate(),
                 order.getTotalPrice(),
                 order.getWarehouseId(),
-                order.getWarehouseStaffId()
-        );
+                order.getWarehouseStaffId());
     }
 
     public List<Order> findAll(int page, int size) {
@@ -70,7 +71,7 @@ public class OrderRepository {
         }
     }
 
-    public int update(Order order) {
+    public void update(Order order) {
         String sql =
                 """
 				UPDATE orders
@@ -78,7 +79,7 @@ public class OrderRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 order.getCreatedDate(),
                 order.getShipStartDate(),
@@ -86,16 +87,15 @@ public class OrderRepository {
                 order.getTotalPrice(),
                 order.getWarehouseId(),
                 order.getWarehouseStaffId(),
-                order.getId()
-        );
+                order.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM orders WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

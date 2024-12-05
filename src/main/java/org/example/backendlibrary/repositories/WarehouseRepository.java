@@ -1,13 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Warehouse;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,8 +41,7 @@ public class WarehouseRepository {
                 warehouse.getDistrict(),
                 warehouse.getWard(),
                 warehouse.getStreet(),
-                warehouse.getCity()
-        );
+                warehouse.getCity());
     }
 
     public List<Warehouse> findAll(int page, int size) {
@@ -71,7 +71,7 @@ public class WarehouseRepository {
         }
     }
 
-    public int update(Warehouse warehouse) {
+    public void update(Warehouse warehouse) {
         String sql =
                 """
 				UPDATE warehouses
@@ -79,7 +79,7 @@ public class WarehouseRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 warehouse.getName(),
                 warehouse.getAddress(),
@@ -90,12 +90,12 @@ public class WarehouseRepository {
                 warehouse.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM warehouses WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

@@ -1,7 +1,7 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.example.backendlibrary.dtos.requests.OrderCreationRequest;
 import org.example.backendlibrary.dtos.requests.OrderUpdateRequest;
 import org.example.backendlibrary.dtos.responses.OrderResponse;
@@ -9,6 +9,8 @@ import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.services.OrderService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/orders")
@@ -42,7 +44,8 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public Response<OrderResponse> updateGenre(@RequestBody OrderUpdateRequest orderUpdateRequest, @PathVariable Long id) {
+    public Response<OrderResponse> updateGenre(
+            @RequestBody @Valid OrderUpdateRequest orderUpdateRequest, @PathVariable Long id) {
         return Response.<OrderResponse>builder()
                 .success(true)
                 .data(orderService.update(id, orderUpdateRequest))

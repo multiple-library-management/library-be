@@ -1,9 +1,9 @@
 package org.example.backendlibrary.dtos.responses;
 
-import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import lombok.*;
 
 @Getter
 @Setter

@@ -1,25 +1,20 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
-import org.example.backendlibrary.dtos.requests.LibraryCreationRequest;
-import org.example.backendlibrary.dtos.requests.LibraryUpdateRequest;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.WarehouseCreationRequest;
 import org.example.backendlibrary.dtos.requests.WarehouseUpdateRequest;
-import org.example.backendlibrary.dtos.responses.LibraryResponse;
 import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.WarehouseResponse;
-import org.example.backendlibrary.entities.Library;
 import org.example.backendlibrary.entities.Warehouse;
 import org.example.backendlibrary.exceptions.AppException;
 import org.example.backendlibrary.exceptions.ErrorCode;
-import org.example.backendlibrary.mappers.LibraryMapper;
 import org.example.backendlibrary.mappers.WarehouseMapper;
-import org.example.backendlibrary.repositories.LibraryRepository;
 import org.example.backendlibrary.repositories.WarehouseRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +31,9 @@ public class WarehouseService {
         int totalPages = (int) Math.ceil((double) totalRecords / size);
 
         return PageResponse.<WarehouseResponse>builder()
-                .items(warehouses.stream().map(warehouseMapper::toWarehouseResponse).toList())
+                .items(warehouses.stream()
+                        .map(warehouseMapper::toWarehouseResponse)
+                        .toList())
                 .records(totalRecords)
                 .totalPages(totalPages)
                 .page(page)

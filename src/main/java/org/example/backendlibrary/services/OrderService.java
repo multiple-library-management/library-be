@@ -1,6 +1,10 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.OrderCreationRequest;
 import org.example.backendlibrary.dtos.requests.OrderUpdateRequest;
 import org.example.backendlibrary.dtos.responses.OrderResponse;
@@ -12,9 +16,7 @@ import org.example.backendlibrary.mappers.OrderMapper;
 import org.example.backendlibrary.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +51,7 @@ public class OrderService {
 
     public OrderResponse create(OrderCreationRequest orderCreationRequest) {
         Order order = orderMapper.toOrder(orderCreationRequest);
-        order.setCreatedDate(LocalDateTime.now());
+        order.setCreatedDate(Timestamp.from(Instant.now()));
         order.setTotalPrice(0);
 
         long orderId = orderRepository.save(order);

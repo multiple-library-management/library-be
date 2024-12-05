@@ -75,7 +75,7 @@ public class EmployeeRepository {
         return jdbcTemplate.queryForObject(sql, EMPLOYEE_ROW_MAPPER, id);
     }
 
-    public int update(Employee employee) {
+    public void update(Employee employee) {
         String sql =
                 """
 				UPDATE employees
@@ -83,7 +83,7 @@ public class EmployeeRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 employee.getFirstName(),
                 employee.getLastName(),
@@ -95,16 +95,15 @@ public class EmployeeRepository {
                 employee.getPhone(),
                 employee.getEmail(),
                 employee.getSalary(),
-                employee.getId()
-        );
+                employee.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM employees WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

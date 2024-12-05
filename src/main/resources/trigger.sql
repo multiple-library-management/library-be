@@ -16,24 +16,26 @@ CREATE OR REPLACE TRIGGER after_insert_copies
 	EXECUTE FUNCTION update_order_total_price();
 
 
-CREATE OR REPLACE FUNCTION update_copy_status_on_return()
-RETURNS TRIGGER AS $$
+----------------------------------------------------- RESETTING STATUS WHEN THE COPY IS RETURNED  -----------------------------------------------------
+CREATE OR REPLACE FUNCTION reset_copy_status_on_return()
+    RETURNS TRIGGER AS $$
 BEGIN
-	-- If the return_date is not null, update the copy status to 'available'
-	IF NEW.return_date IS NOT NULL THEN
-		UPDATE "copies"
-		SET status = 'available'
-		WHERE id = NEW.copy_id;
-	END IF;
+    -- Reset the status of the copy to 'available' when the book is returned
+    IF NEW.return_date IS NOT NULL THEN
+        UPDATE copies
+        SET status = 'available'  -- or any other status that fits your model
+        WHERE id = NEW.copy_id;
+    END IF;
 
-	RETURN NEW;
+    -- Return the updated row (standard behavior for an AFTER UPDATE trigger)
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE TRIGGER after_update_insert_return_date_borrow_tickets
-	AFTER INSERT OR UPDATE OF return_date ON borrow_tickets
-	FOR EACH ROW
-	EXECUTE FUNCTION update_copy_status_on_return();
+CREATE OR REPLACE TRIGGER reset_copy_status_on_return_trigger
+AFTER UPDATE ON copy_borrow_tickets
+FOR EACH ROW
+EXECUTE FUNCTION reset_copy_status_on_return();
 
 -- -- Insert a warehouse with id = 1
 -- INSERT INTO warehouses (name, address, district, ward, street, city)

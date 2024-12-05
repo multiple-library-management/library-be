@@ -1,9 +1,10 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.MemberCreationRequest;
 import org.example.backendlibrary.dtos.requests.MemberUpdateRequest;
-import org.example.backendlibrary.dtos.responses.EmployeeResponse;
 import org.example.backendlibrary.dtos.responses.MemberResponse;
 import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.entities.Member;
@@ -13,8 +14,7 @@ import org.example.backendlibrary.mappers.MemberMapper;
 import org.example.backendlibrary.repositories.MemberRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor

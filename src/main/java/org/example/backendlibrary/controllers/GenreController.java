@@ -44,7 +44,8 @@ public class GenreController {
     }
 
     @PutMapping("/{id}")
-    public Response<GenreResponse> updateGenre(@RequestBody GenreUpdateRequest genreUpdateRequest, @PathVariable Long id) {
+    public Response<GenreResponse> updateGenre(
+            @RequestBody @Valid GenreUpdateRequest genreUpdateRequest, @PathVariable Long id) {
 
         return Response.<GenreResponse>builder()
                 .success(true)

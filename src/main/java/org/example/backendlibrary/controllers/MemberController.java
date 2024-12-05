@@ -1,7 +1,7 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.example.backendlibrary.dtos.requests.MemberCreationRequest;
 import org.example.backendlibrary.dtos.requests.MemberUpdateRequest;
 import org.example.backendlibrary.dtos.responses.MemberResponse;
@@ -9,6 +9,8 @@ import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.services.MemberService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/members")
@@ -42,7 +44,8 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public Response<MemberResponse> updateEmployee(@RequestBody MemberUpdateRequest memberUpdateRequest, @PathVariable Long id) {
+    public Response<MemberResponse> updateEmployee(
+            @RequestBody @Valid MemberUpdateRequest memberUpdateRequest, @PathVariable Long id) {
         return Response.<MemberResponse>builder()
                 .success(true)
                 .data(memberService.update(id, memberUpdateRequest))

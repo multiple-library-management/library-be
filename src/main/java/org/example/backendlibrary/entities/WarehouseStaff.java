@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WarehouseStaff {
-    private Long id;
     private Long warehouseId;
     private Long employeeId;
 }

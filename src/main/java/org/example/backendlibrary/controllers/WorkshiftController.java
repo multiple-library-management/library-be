@@ -1,7 +1,7 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.example.backendlibrary.dtos.requests.WorkshiftCreationRequest;
 import org.example.backendlibrary.dtos.requests.WorkshiftUpdateRequest;
 import org.example.backendlibrary.dtos.responses.PageResponse;
@@ -9,6 +9,8 @@ import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.dtos.responses.WorkshiftResponse;
 import org.example.backendlibrary.services.WorkshiftService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/workshifts")
@@ -34,7 +36,8 @@ public class WorkshiftController {
     }
 
     @PostMapping
-    public Response<WorkshiftResponse> createGenre(@RequestBody @Valid WorkshiftCreationRequest workshiftCreationRequest) {
+    public Response<WorkshiftResponse> createGenre(
+            @RequestBody @Valid WorkshiftCreationRequest workshiftCreationRequest) {
         return Response.<WorkshiftResponse>builder()
                 .success(true)
                 .data(workshiftService.create(workshiftCreationRequest))
@@ -42,7 +45,8 @@ public class WorkshiftController {
     }
 
     @PutMapping("/{id}")
-    public Response<WorkshiftResponse> updateGenre(@RequestBody WorkshiftUpdateRequest orderUpdateRequest, @PathVariable Long id) {
+    public Response<WorkshiftResponse> updateGenre(
+            @RequestBody @Valid WorkshiftUpdateRequest orderUpdateRequest, @PathVariable Long id) {
         return Response.<WorkshiftResponse>builder()
                 .success(true)
                 .data(workshiftService.update(id, orderUpdateRequest))

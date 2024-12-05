@@ -1,18 +1,16 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.example.backendlibrary.dtos.requests.LibraryCreationRequest;
-import org.example.backendlibrary.dtos.requests.LibraryUpdateRequest;
+
 import org.example.backendlibrary.dtos.requests.WarehouseCreationRequest;
 import org.example.backendlibrary.dtos.requests.WarehouseUpdateRequest;
-import org.example.backendlibrary.dtos.responses.LibraryResponse;
 import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.dtos.responses.WarehouseResponse;
-import org.example.backendlibrary.services.LibraryService;
 import org.example.backendlibrary.services.WarehouseService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/warehouses")
@@ -38,7 +36,8 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public Response<WarehouseResponse> createGenre(@RequestBody @Valid WarehouseCreationRequest warehouseCreationRequest) {
+    public Response<WarehouseResponse> createGenre(
+            @RequestBody @Valid WarehouseCreationRequest warehouseCreationRequest) {
         return Response.<WarehouseResponse>builder()
                 .success(true)
                 .data(warehouseService.create(warehouseCreationRequest))
@@ -46,7 +45,8 @@ public class WarehouseController {
     }
 
     @PutMapping("/{id}")
-    public Response<WarehouseResponse> updateGenre(@RequestBody WarehouseUpdateRequest warehouseUpdateRequest, @PathVariable Long id) {
+    public Response<WarehouseResponse> updateGenre(
+            @RequestBody @Valid WarehouseUpdateRequest warehouseUpdateRequest, @PathVariable Long id) {
         return Response.<WarehouseResponse>builder()
                 .success(true)
                 .data(warehouseService.update(id, warehouseUpdateRequest))
