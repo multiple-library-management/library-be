@@ -72,22 +72,22 @@ public class GenreRepository {
         }
     }
 
-    public int update(Genre genre) {
+    public void update(Genre genre) {
         String sql = """
 				UPDATE genres
 				SET name = ?
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, genre.getName(), genre.getId());
+        jdbcTemplate.update(sql, genre.getName(), genre.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM genres WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

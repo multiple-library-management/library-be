@@ -1,8 +1,8 @@
 package org.example.backendlibrary.entities;
 
-import lombok.*;
+import java.sql.Timestamp;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter
@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Order {
     private Long id;
-    private LocalDateTime createdDate;
-    private LocalDateTime shipStartDate;
-    private LocalDateTime shipEndDate;
+    private Timestamp createdDate;
+    private Timestamp shipStartDate;
+    private Timestamp shipEndDate;
     private Integer totalPrice;
 
     private Integer warehouseId;

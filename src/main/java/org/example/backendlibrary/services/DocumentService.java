@@ -86,7 +86,7 @@ public class DocumentService {
             Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findByName(genre));
             if (optionalGenre.isEmpty()) {
                 long genreId = genreRepository.save(Genre.builder().name(genre).build());
-                documentGenresRepository.addGenreToDocument(documentId,genreId);
+                documentGenresRepository.addGenreToDocument(documentId, genreId);
                 return;
             }
 

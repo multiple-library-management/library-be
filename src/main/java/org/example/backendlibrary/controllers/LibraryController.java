@@ -44,7 +44,8 @@ public class LibraryController {
     }
 
     @PutMapping("/{id}")
-    public Response<LibraryResponse> updateGenre(@RequestBody LibraryUpdateRequest libraryUpdateRequest, @PathVariable Long id) {
+    public Response<LibraryResponse> updateGenre(
+            @RequestBody @Valid LibraryUpdateRequest libraryUpdateRequest, @PathVariable Long id) {
         return Response.<LibraryResponse>builder()
                 .success(true)
                 .data(libraryService.update(id, libraryUpdateRequest))

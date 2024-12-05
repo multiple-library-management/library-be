@@ -71,7 +71,7 @@ public class LibraryRepository {
         }
     }
 
-    public int update(Library library) {
+    public void update(Library library) {
         String sql =
                 """
 				UPDATE libraries
@@ -79,7 +79,7 @@ public class LibraryRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 library.getName(),
                 library.getAddress(),
@@ -90,12 +90,12 @@ public class LibraryRepository {
                 library.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM libraries WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

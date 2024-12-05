@@ -1,13 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.WarehouseStaff;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,7 +16,6 @@ public class WarehouseStaffRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private static final RowMapper<WarehouseStaff> WAREHOUSE_STAFF_ROW_MAPPER = (rs, rowNum) -> WarehouseStaff.builder()
-            .id(rs.getLong("id"))
             .warehouseId(rs.getLong("warehouse_id"))
             .employeeId(rs.getLong("employee_id"))
             .build();
@@ -28,7 +28,8 @@ public class WarehouseStaffRepository {
 				RETURNING id;
 				""";
 
-        return jdbcTemplate.queryForObject(sql, Long.class, warehouseStaff.getWarehouseId(), warehouseStaff.getEmployeeId());
+        return jdbcTemplate.queryForObject(
+                sql, Long.class, warehouseStaff.getWarehouseId(), warehouseStaff.getEmployeeId());
     }
 
     public List<WarehouseStaff> findAll(int page, int size) {
@@ -38,25 +39,11 @@ public class WarehouseStaffRepository {
         String sql = """
 				SELECT *
 				FROM warehouse_staffs
-				ORDER BY id
+				ORDER BY employee_id
 				LIMIT ? OFFSET ?;
 				""";
 
         return jdbcTemplate.query(sql, new Object[] {size, offset}, WAREHOUSE_STAFF_ROW_MAPPER);
-    }
-
-    public WarehouseStaff findById(Long id) {
-        String sql = """
-				SELECT *
-				FROM warehouse_staffs
-				WHERE id = ?;
-				""";
-
-        try {
-            return jdbcTemplate.queryForObject(sql, WAREHOUSE_STAFF_ROW_MAPPER, id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
     }
 
     public WarehouseStaff findByEmployeeId(Long employeeId) {
@@ -73,30 +60,44 @@ public class WarehouseStaffRepository {
         }
     }
 
-    public int update(WarehouseStaff warehouseStaff) {
+    //    public WarehouseStaff findByEmployeeId(Long employeeId) {
+    //        String sql = """
+    //				SELECT *
+    //				FROM warehouse_staffs
+    //				WHERE employee_id = ?;
+    //				""";
+    //
+    //        try {
+    //            return jdbcTemplate.queryForObject(sql, WAREHOUSE_STAFF_ROW_MAPPER, employeeId);
+    //        } catch (EmptyResultDataAccessException e) {
+    //            return null;
+    //        }
+    //    }
+
+    public void update(WarehouseStaff warehouseStaff) {
         String sql = """
 				UPDATE warehouse_staffs
-				SET employee_id = ?, warehouse_id = ?
-				WHERE id = ?;
+				SET warehouse_id = ?
+				WHERE employee_id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, warehouseStaff.getEmployeeId(), warehouseStaff.getWarehouseId());
+        jdbcTemplate.update(sql, warehouseStaff.getWarehouseId(), warehouseStaff.getEmployeeId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteByEmployeeId(Long employeeId) {
         String sql = """
-				DELETE FROM warehouse_staffs WHERE id = ?;
+				DELETE FROM warehouse_staffs WHERE employee_id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, employeeId);
     }
 
-    public boolean existsById(Long id) {
+    public boolean existsByEmployeeId(Long employeeId) {
         String sql = """
-				SELECT COUNT(*) FROM warehouse_staffs WHERE id = ?;
+				SELECT COUNT(*) FROM warehouse_staffs WHERE employee_id = ?;
 				""";
         // Execute the query and check if the count is greater than 0
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[] {id}, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[] {employeeId}, Integer.class);
 
         return count != null && count > 0;
     }

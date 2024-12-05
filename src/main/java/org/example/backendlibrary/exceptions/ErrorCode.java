@@ -16,9 +16,9 @@ public enum ErrorCode {
     ORDER_NOTFOUND(1001, "Order not found", HttpStatus.BAD_REQUEST),
     COPY_NOTFOUND(1001, "Copy not found", HttpStatus.BAD_REQUEST),
     WORKSHIFT_NOTFOUND(1001, "Workshift not found", HttpStatus.BAD_REQUEST),
-    MEMBER_NOTFOUND(1001, "Member not found", HttpStatus.BAD_REQUEST)
-
-    ;
+    MEMBER_NOTFOUND(1001, "Member not found", HttpStatus.BAD_REQUEST),
+    TRANSFER_NOTFOUND(1001, "Transfer not found", HttpStatus.BAD_REQUEST),
+    BORROW_TICKET_NOTFOUND(1001, "Borrow ticket not found", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

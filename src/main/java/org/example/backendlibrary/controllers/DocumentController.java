@@ -36,7 +36,8 @@ public class DocumentController {
     }
 
     @PostMapping
-    public Response<DocumentResponse> createDocument(@RequestBody @Valid DocumentCreationRequest documentCreationRequest) {
+    public Response<DocumentResponse> createDocument(
+            @RequestBody @Valid DocumentCreationRequest documentCreationRequest) {
         return Response.<DocumentResponse>builder()
                 .success(true)
                 .data(documentService.create(documentCreationRequest))
@@ -45,7 +46,7 @@ public class DocumentController {
 
     @PutMapping("/{id}")
     public Response<DocumentResponse> updateDocument(
-            @RequestBody DocumentUpdateRequest documentUpdateRequest, @PathVariable Long id) {
+            @RequestBody @Valid DocumentUpdateRequest documentUpdateRequest, @PathVariable Long id) {
         return Response.<DocumentResponse>builder()
                 .success(true)
                 .data(documentService.update(id, documentUpdateRequest))

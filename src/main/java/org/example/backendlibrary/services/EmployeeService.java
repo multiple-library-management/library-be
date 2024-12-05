@@ -47,7 +47,8 @@ public class EmployeeService {
                 return;
             }
 
-            Optional<WarehouseStaff> optionalWarehouseStaff = Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(employeeResponse.getId()));
+            Optional<WarehouseStaff> optionalWarehouseStaff =
+                    Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(employeeResponse.getId()));
 
             if (optionalWarehouseStaff.isPresent()) {
                 employeeResponse.setType("warehouse_staff");
@@ -85,7 +86,8 @@ public class EmployeeService {
             employeeResponse.setLibraryId(optionalLibrarian.get().getLibraryId());
         }
 
-        Optional<WarehouseStaff> optionalWarehouseStaff = Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(employeeResponse.getId()));
+        Optional<WarehouseStaff> optionalWarehouseStaff =
+                Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(employeeResponse.getId()));
 
         if (optionalWarehouseStaff.isPresent()) {
             employeeResponse.setType("warehouse_staff");
@@ -114,14 +116,14 @@ public class EmployeeService {
                     .build());
         } else if (employeeCreationRequest.getType().equalsIgnoreCase("warehouse_staff")) {
             // Check if the warehouse is present
-            if (!warehouseStaffRepository.existsById(employeeCreationRequest.getWarehouseId())) {
+            if (!warehouseStaffRepository.existsByEmployeeId(employeeCreationRequest.getWarehouseId())) {
                 throw new AppException(ErrorCode.WAREHOUSE_NOTFOUND);
             }
 
             // if the warehouse is present
             warehouseStaffRepository.save(WarehouseStaff.builder()
-                            .employeeId(employeeId)
-                            .warehouseId(employeeCreationRequest.getWarehouseId())
+                    .employeeId(employeeId)
+                    .warehouseId(employeeCreationRequest.getWarehouseId())
                     .build());
         }
 
@@ -151,11 +153,11 @@ public class EmployeeService {
 
             // delete librarian
             Librarian librarian = librarianRepository.findByEmployeeId(id);
-            librarianRepository.deleteById(librarian.getId());
+            librarianRepository.deleteByEmployeeId(librarian.getEmployeeId());
 
             // delete warehouse staff
             WarehouseStaff warehouseStaff = warehouseStaffRepository.findByEmployeeId(id);
-            warehouseStaffRepository.deleteById(warehouseStaff.getId());
+            warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId());
 
             // recreate librarian
             librarian = Librarian.builder()
@@ -172,11 +174,11 @@ public class EmployeeService {
 
             // delete librarian
             Librarian librarian = librarianRepository.findByEmployeeId(id);
-            librarianRepository.deleteById(librarian.getId());
+            librarianRepository.deleteByEmployeeId(librarian.getEmployeeId());
 
             // delete warehouse staff
             WarehouseStaff warehouseStaff = warehouseStaffRepository.findByEmployeeId(id);
-            warehouseStaffRepository.deleteById(warehouseStaff.getId());
+            warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId());
 
             // recreate warehouse staff
             warehouseStaff = WarehouseStaff.builder()

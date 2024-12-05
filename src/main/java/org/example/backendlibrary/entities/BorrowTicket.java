@@ -5,9 +5,12 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Librarian {
-    private Long libraryId;
-    private Long employeeId;
+public class BorrowTicket {
+    private Long id;
+
+    private Long memberId;
+    private Long librarianId;
 }

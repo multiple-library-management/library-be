@@ -1,7 +1,7 @@
 package org.example.backendlibrary.controllers;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
 import org.example.backendlibrary.dtos.requests.CopyCreationRequest;
 import org.example.backendlibrary.dtos.requests.CopyUpdateRequest;
 import org.example.backendlibrary.dtos.responses.CopyResponse;
@@ -9,6 +9,8 @@ import org.example.backendlibrary.dtos.responses.PageResponse;
 import org.example.backendlibrary.dtos.responses.Response;
 import org.example.backendlibrary.services.CopyService;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("${app.api-prefix}/copies")
@@ -42,7 +44,8 @@ public class CopyController {
     }
 
     @PutMapping("/{id}")
-    public Response<CopyResponse> updateGenre(@RequestBody CopyUpdateRequest copyUpdateRequest, @PathVariable Long id) {
+    public Response<CopyResponse> updateGenre(
+            @RequestBody @Valid CopyUpdateRequest copyUpdateRequest, @PathVariable Long id) {
         return Response.<CopyResponse>builder()
                 .success(true)
                 .data(copyService.update(id, copyUpdateRequest))

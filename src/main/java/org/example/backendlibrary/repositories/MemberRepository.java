@@ -1,12 +1,13 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -45,8 +46,7 @@ public class MemberRepository {
                 member.getStreet(),
                 member.getCity(),
                 member.getPhone(),
-                member.getEmail()
-        );
+                member.getEmail());
     }
 
     public List<Member> findAll(int page, int size) {
@@ -73,7 +73,7 @@ public class MemberRepository {
         return jdbcTemplate.queryForObject(sql, MEMBER_ROW_MAPPER, id);
     }
 
-    public int update(Member member) {
+    public void update(Member member) {
         String sql =
                 """
 				UPDATE members
@@ -81,7 +81,7 @@ public class MemberRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 member.getFirstName(),
                 member.getLastName(),
@@ -92,16 +92,15 @@ public class MemberRepository {
                 member.getCity(),
                 member.getPhone(),
                 member.getEmail(),
-                member.getId()
-        );
+                member.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM members WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

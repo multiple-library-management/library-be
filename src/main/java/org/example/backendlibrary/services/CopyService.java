@@ -1,7 +1,8 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.CopyCreationRequest;
 import org.example.backendlibrary.dtos.requests.CopyUpdateRequest;
 import org.example.backendlibrary.dtos.responses.CopyResponse;
@@ -13,8 +14,8 @@ import org.example.backendlibrary.mappers.CopyMapper;
 import org.example.backendlibrary.repositories.CopyRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -51,9 +52,9 @@ public class CopyService {
     public CopyResponse create(CopyCreationRequest copyCreationRequest) {
         Copy copy = copyMapper.toCopy(copyCreationRequest);
 
-        if(copy.getLibraryId() == 0){
+        if (copy.getLibraryId() == 0) {
             copy.setLibraryId(null);
-        } else if(copy.getWarehouseId() == 0){
+        } else if (copy.getWarehouseId() == 0) {
             copy.setWarehouseId(null);
         }
 
@@ -76,9 +77,9 @@ public class CopyService {
 
         copyMapper.updateCopy(copy, copyUpdateRequest);
 
-        if(copy.getLibraryId() == 0){
+        if (copy.getLibraryId() == 0) {
             copy.setLibraryId(null);
-        } else if(copy.getWarehouseId() == 0){
+        } else if (copy.getWarehouseId() == 0) {
             copy.setWarehouseId(null);
         }
 

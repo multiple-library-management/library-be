@@ -1,13 +1,14 @@
 package org.example.backendlibrary.repositories;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.example.backendlibrary.entities.Workshift;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,21 +37,19 @@ public class WorkshiftRepository {
                 workshift.getDate(),
                 workshift.getStartTime(),
                 workshift.getEndTime(),
-                workshift.getEmployeeId()
-        );
+                workshift.getEmployeeId());
     }
 
     public List<Workshift> findAll(int page, int size) {
         int offset = (page - 1) * size;
 
         // SQL query for pagination
-        String sql =
-                    """
-                    SELECT *
-                    FROM workshifts
-                    ORDER BY id
-                    LIMIT ? OFFSET ?;
-				    """;
+        String sql = """
+					SELECT *
+					FROM workshifts
+					ORDER BY id
+					LIMIT ? OFFSET ?;
+					""";
 
         return jdbcTemplate.query(sql, new Object[] {size, offset}, WORKSHIFT_ROW_MAPPER);
     }
@@ -68,7 +67,7 @@ public class WorkshiftRepository {
         }
     }
 
-    public int update(Workshift workshift) {
+    public void update(Workshift workshift) {
         String sql =
                 """
 				UPDATE workshifts
@@ -76,22 +75,21 @@ public class WorkshiftRepository {
 				WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 workshift.getDate(),
                 workshift.getStartTime(),
                 workshift.getEndTime(),
                 workshift.getEmployeeId(),
-                workshift.getId()
-        );
+                workshift.getId());
     }
 
-    public int deleteById(Long id) {
+    public void deleteById(Long id) {
         String sql = """
 				DELETE FROM workshifts WHERE id = ?;
 				""";
 
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     public boolean existsById(Long id) {

@@ -36,7 +36,8 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Response<EmployeeResponse> createEmployee(@RequestBody @Valid EmployeeCreationRequest employeeCreationRequest) {
+    public Response<EmployeeResponse> createEmployee(
+            @RequestBody @Valid EmployeeCreationRequest employeeCreationRequest) {
         return Response.<EmployeeResponse>builder()
                 .success(true)
                 .data(employeeService.create(employeeCreationRequest))
@@ -44,7 +45,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public Response<EmployeeResponse> updateEmployee(@RequestBody EmployeeUpdateRequest employeeUpdateRequest, @PathVariable Long id) {
+    public Response<EmployeeResponse> updateEmployee(
+            @RequestBody @Valid EmployeeUpdateRequest employeeUpdateRequest, @PathVariable Long id) {
         return Response.<EmployeeResponse>builder()
                 .success(true)
                 .data(employeeService.update(id, employeeUpdateRequest))

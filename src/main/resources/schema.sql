@@ -27,14 +27,14 @@ CREATE TABLE IF NOT EXISTS document_genres (
 	genre_id INT NOT NULL,
     
     CONSTRAINT fk_document 
-    	FOREIGN KEY (document_id) 
-    		REFERENCES documents (id) 
-    			ON DELETE CASCADE,
+    FOREIGN KEY (document_id) 
+    REFERENCES documents (id) 
+    ON DELETE CASCADE,
     			
     CONSTRAINT fk_genre 
-    	FOREIGN KEY (genre_id) 
-    		REFERENCES genres (id) 
-    			ON DELETE CASCADE,
+    FOREIGN KEY (genre_id) 
+   	REFERENCES genres (id) 
+    ON DELETE CASCADE,
     			
     PRIMARY KEY (document_id, genre_id)
 );
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS document_authors (
     author_name VARCHAR(70) NOT NULL,
     
     CONSTRAINT fk_document 
-    	FOREIGN KEY (document_id) 
-    		REFERENCES documents (id) 
-    			ON DELETE CASCADE,
+    FOREIGN KEY (document_id) 
+    REFERENCES documents (id) 
+    ON DELETE CASCADE,
     			
     PRIMARY KEY (document_id, author_name)
 );
@@ -75,7 +75,6 @@ CREATE TABLE IF NOT EXISTS "libraries" (
     
     name VARCHAR(50) NOT NULL,
 
-
 	address VARCHAR(50) NOT NULL,
     district VARCHAR(50) NOT NULL,
     ward VARCHAR(50) NOT NULL,
@@ -86,20 +85,19 @@ CREATE TABLE IF NOT EXISTS "libraries" (
 );
 
 CREATE TABLE IF NOT EXISTS librarians (
-    id SERIAL NOT NULL,
+	employee_id INT UNIQUE NOT NULL,
+
     library_id INT NOT NULL,
 
-	employee_id INT NOT NULL,
-
     CONSTRAINT fk_employee 
-    	FOREIGN KEY (employee_id) 
-    		REFERENCES employees (id)
-				ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) 
+    REFERENCES employees (id)
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_library 
-    	FOREIGN KEY (library_id) 
-    		REFERENCES libraries (id)
-				ON DELETE CASCADE,
+   	FOREIGN KEY (library_id) 
+    REFERENCES libraries (id)
+	ON DELETE CASCADE,
     		
     PRIMARY KEY (id)
 );
@@ -119,23 +117,21 @@ CREATE TABLE IF NOT EXISTS warehouses (
 );
 
 CREATE TABLE IF NOT EXISTS warehouse_staffs (
-    id SERIAL NOT NULL,
-    
-    warehouse_id INT NOT NULL,
+	employee_id INT UNIQUE NOT NULL,
 
-	employee_id INT NOT NULL,
+    warehouse_id INT NOT NULL,
     
     CONSTRAINT fk_employee 
-    	FOREIGN KEY (employee_id) 
-    		REFERENCES employees (id)
-				ON DELETE CASCADE,
+    FOREIGN KEY (employee_id) 
+    REFERENCES employees (id)
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_warehouse 
-    	FOREIGN KEY (warehouse_id) 
-    		REFERENCES warehouses (id)
-				ON DELETE CASCADE,
+   	FOREIGN KEY (warehouse_id) 
+    REFERENCES warehouses (id)
+	ON DELETE CASCADE,
     		
-    PRIMARY KEY (id)
+    PRIMARY KEY (employee_id)
 );
 
 CREATE TABLE IF NOT EXISTS "orders" (
@@ -150,14 +146,14 @@ CREATE TABLE IF NOT EXISTS "orders" (
     warehouse_staff_id INT NOT NULL,
     
     CONSTRAINT fk_warehouse 
-    	FOREIGN KEY (warehouse_id) 
-    		REFERENCES warehouses (id)
-				ON DELETE SET NULL,
+   	FOREIGN KEY (warehouse_id) 
+    REFERENCES warehouses (id)
+	ON DELETE SET NULL,
     		
     CONSTRAINT fk_warehouse_staff 
-    	FOREIGN KEY (warehouse_staff_id) 
-    		REFERENCES warehouse_staffs (id)
-				ON DELETE SET NULL,
+    FOREIGN KEY (warehouse_staff_id) 
+    REFERENCES warehouse_staffs (id)
+	ON DELETE SET NULL,
     		
     PRIMARY KEY (id)
 );
@@ -175,24 +171,24 @@ CREATE TABLE IF NOT EXISTS "copies" (
     order_id INT NOT NULL,
     
     CONSTRAINT fk_document 
-    	FOREIGN KEY (document_id) 
-    		REFERENCES documents (id)
-				ON DELETE RESTRICT,
+    FOREIGN KEY (document_id) 
+    REFERENCES documents (id)
+	ON DELETE RESTRICT,
     		
     CONSTRAINT fk_library 
-    	FOREIGN KEY (library_id) 
-    		REFERENCES libraries (id)
-				ON DELETE RESTRICT,
+    FOREIGN KEY (library_id) 
+    REFERENCES libraries (id)
+	ON DELETE RESTRICT,
     		
     CONSTRAINT fk_warehouse 
-    	FOREIGN KEY (warehouse_id) 
-    		REFERENCES warehouses (id)
-				ON DELETE RESTRICT,
+    FOREIGN KEY (warehouse_id) 
+    REFERENCES warehouses (id)
+	ON DELETE RESTRICT,
     		
     CONSTRAINT fk_order 
-    	FOREIGN KEY (order_id) 
-    		REFERENCES "orders" (id)
-				ON DELETE RESTRICT,
+   	FOREIGN KEY (order_id) 
+    REFERENCES "orders" (id)
+	ON DELETE RESTRICT,
     		
     PRIMARY KEY (id)
 );
@@ -208,9 +204,9 @@ CREATE TABLE IF NOT EXISTS workshifts (
 
     
     CONSTRAINT fk_employee
-    	FOREIGN KEY (employee_id)
-    		REFERENCES employees (id)
-				ON DELETE CASCADE,
+    FOREIGN KEY (employee_id)
+    REFERENCES employees (id)
+	ON DELETE CASCADE,
     
     PRIMARY KEY (id)
 );
@@ -249,19 +245,19 @@ CREATE TABLE IF NOT EXISTS transfers (
     warehouse_staff_id INT NOT NULL,
     
     CONSTRAINT fk_library 
-    	FOREIGN KEY (library_id) 
-    		REFERENCES libraries (id)
-				ON DELETE RESTRICT,
+   	FOREIGN KEY (library_id) 
+    REFERENCES libraries (id)
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_warehouse 
-    	FOREIGN KEY (warehouse_id) 
-    		REFERENCES warehouses (id)
-				ON DELETE RESTRICT,
+    FOREIGN KEY (warehouse_id) 
+    REFERENCES warehouses (id)
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_warehouse_staff 
-    	FOREIGN KEY (warehouse_staff_id) 
-    		REFERENCES warehouse_staffs (id)
-				ON DELETE RESTRICT,
+    FOREIGN KEY (warehouse_staff_id) 
+    REFERENCES warehouse_staffs (id)
+	ON DELETE CASCADE,
     		
     PRIMARY KEY (id)
 );
@@ -271,14 +267,14 @@ CREATE TABLE IF NOT EXISTS copy_transfers (
     transfer_id INT NOT NULL,
     
     CONSTRAINT fk_copy 
-    	FOREIGN KEY (copy_id) 
-    		REFERENCES copies (id)
-				ON DELETE CASCADE,
+    FOREIGN KEY (copy_id) 
+    REFERENCES copies (id)
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_transfer 
-    	FOREIGN KEY (transfer_id) 
-    		REFERENCES transfers (id)
-				ON DELETE CASCADE,
+   	FOREIGN KEY (transfer_id) 
+    REFERENCES transfers (id)
+	ON DELETE CASCADE,
     		
     PRIMARY KEY (copy_id, transfer_id)
 );
@@ -286,33 +282,44 @@ CREATE TABLE IF NOT EXISTS copy_transfers (
 CREATE TABLE IF NOT EXISTS borrow_tickets (
     id SERIAL UNIQUE NOT NULL,
     
+    member_id INT NOT NULL,
+    librarian_id INT NOT NULL,
+    
+    CONSTRAINT fk_member 
+    FOREIGN KEY (member_id) 
+    REFERENCES members (id)
+	ON DELETE CASCADE,
+    		
+    CONSTRAINT fk_librarian 
+    FOREIGN KEY (librarian_id) 
+    REFERENCES librarians (id)
+	ON DELETE CASCADE,
+    		
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS copy_borrow_tickets (	
     start_date TIMESTAMP NOT NULL,
     end_date TIMESTAMP NOT NULL,
     return_date TIMESTAMP,
     fee INTEGER NOT NULL,
     fine INTEGER,
     status_on_return varchar(50) check (status_on_return in ('good', 'bad', 'lost')),
-    
+
     copy_id INT NOT NULL,
-    member_id INT NOT NULL,
-    librarian_id INT NOT NULL,
-    
+	borrow_ticket_id INT NOT NULL,
+
     CONSTRAINT fk_copy 
-    	FOREIGN KEY (copy_id) 
-    		REFERENCES copies (id)
-				ON DELETE RESTRICT,
-    		
-    CONSTRAINT fk_member 
-    	FOREIGN KEY (member_id) 
-    		REFERENCES members (id)
-				ON DELETE RESTRICT,
-    		
-    CONSTRAINT fk_librarian 
-    	FOREIGN KEY (librarian_id) 
-    		REFERENCES librarians (id)
-				ON DELETE RESTRICT,
-    		
-    PRIMARY KEY (id)
+    FOREIGN KEY (copy_id) 
+    REFERENCES copies (id)
+	ON DELETE CASCADE,
+
+	CONSTRAINT fk_borrow_ticket
+	FOREIGN KEY (borrow_ticket_id)
+	REFERENCES borrow_tickets (id)
+	ON DELETE CASCADE,
+
+	PRIMARY KEY (copy_id, borrow_ticket_id)
 );
 
 

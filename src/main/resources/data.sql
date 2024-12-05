@@ -349,18 +349,18 @@ INSERT INTO employees (first_name, last_name, address, street, ward, district, c
 
 DELETE FROM librarians;
 
-INSERT INTO librarians (library_id, employee_id) VALUES
+INSERT INTO librarians (employee_id, library_id) VALUES
 (1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(3, 5),
-(3, 6),
-(4, 7),
-(4, 8),
-(5, 9),
-(5, 10),
-(6, 11);
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(7, 4),
+(8, 4),
+(9, 5),
+(10, 5),
+(11, 6);
 
 ----------------warehouse-------------------------------
 DELETE FROM warehouses;
@@ -373,9 +373,9 @@ INSERT INTO warehouses ("name", address, district, ward, street, city) VALUES
 ----------------warehouse_staffs--------------------
 DELETE FROM warehouse_staffs;
 
-INSERT INTO warehouse_staffs (warehouse_id, employee_id) VALUES
-(1,12), (1,13),
-(2,14), (2,15);
+INSERT INTO warehouse_staffs (employee_id, warehouse_id) VALUES
+(12,1), (13,1),
+(14,2), (15,2);
 
 ----------------workshift-----------------------
 DELETE FROM workshifts;

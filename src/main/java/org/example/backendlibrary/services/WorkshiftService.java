@@ -1,6 +1,8 @@
 package org.example.backendlibrary.services;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
+
 import org.example.backendlibrary.dtos.requests.WorkshiftCreationRequest;
 import org.example.backendlibrary.dtos.requests.WorkshiftUpdateRequest;
 import org.example.backendlibrary.dtos.responses.PageResponse;
@@ -12,9 +14,7 @@ import org.example.backendlibrary.mappers.WorkshiftMapper;
 import org.example.backendlibrary.repositories.WorkshiftRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,9 @@ public class WorkshiftService {
         int totalPages = (int) Math.ceil((double) totalRecords / size);
 
         return PageResponse.<WorkshiftResponse>builder()
-                .items(workshifts.stream().map(workshiftMapper::toWorkshiftResponse).toList())
+                .items(workshifts.stream()
+                        .map(workshiftMapper::toWorkshiftResponse)
+                        .toList())
                 .records(totalRecords)
                 .totalPages(totalPages)
                 .page(page)
