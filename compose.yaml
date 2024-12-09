@@ -31,7 +31,9 @@ services:
     container_name: db_container
     image: postgres:lastest
     environment:
+      POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
     ports:
       - "5432:5432"
     networks:
