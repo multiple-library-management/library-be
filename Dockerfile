@@ -24,7 +24,7 @@ RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/
 USER appuser
 
 # Copy the JAR from the builder stage
-COPY --from=builder /app/target/your-app.jar /app/app.jar
+COPY --from=builder /app/target/backend-library-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Expose the port and define the entrypoint
 EXPOSE 8080
