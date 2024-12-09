@@ -16,7 +16,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://autorack.proxy.rlwy.net:25638/railway
+      SPRING_DATASOURCE_URL: postgresql://autorack.proxy.rlwy.net:25638/railway
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: gmWnJFvKHzdYvPPjXKDLuDTYCAVLlZos
 #    depends_on:
