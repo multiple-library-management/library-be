@@ -2,9 +2,9 @@ spring:
   application:
     name: backend-library
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: root
-    password: root
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/postgres}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
 #    initialization-mode: always
 
