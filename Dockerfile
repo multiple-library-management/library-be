@@ -7,6 +7,11 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
+# Copy the Maven wrapper and ensure it's executable
+COPY mvnw ./
+COPY .mvn/ .mvn/
+RUN chmod +x mvnw
+
 # Install dependencies and build the JAR
 RUN ./mvnw clean package -DskipTests
 
