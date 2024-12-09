@@ -8,7 +8,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Install dependencies and build the JAR
-RUN mvn clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
 # Runtime image with only JRE
 FROM eclipse-temurin:17-jre-jammy AS final
