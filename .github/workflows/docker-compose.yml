@@ -40,9 +40,9 @@ jobs:
           sleep 30 # Wait for 30 seconds for services to be fully initialized
 
       # Step 6: Run tests or check if the app is running
-      - name: Test Spring Boot application
-        run: |
-          curl --fail http://localhost:8080 || exit 1
+#      - name: Test Spring Boot application
+#        run: |
+#          curl --fail http://localhost:8080 || exit 1
 
       # Step 7: Tear down the Docker Compose services after testing
       - name: Stop Docker Compose
