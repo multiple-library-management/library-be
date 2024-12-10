@@ -41,7 +41,7 @@ public class GenreService {
         Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findById(id));
 
         if (optionalGenre.isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.GENRE_NOTFOUND);
         }
 
         return genreMapper.toGenreResponse(optionalGenre.get());
@@ -60,7 +60,7 @@ public class GenreService {
         Optional<Genre> optionalGenre = Optional.ofNullable(genreRepository.findById(id));
 
         if (optionalGenre.isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.GENRE_NOTFOUND);
         }
 
         Genre genre = optionalGenre.get();
@@ -74,7 +74,7 @@ public class GenreService {
 
     public void delete(Long id) {
         if (!genreRepository.existsById(id)) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.GENRE_NOTFOUND);
         }
 
         genreRepository.deleteById(id);
