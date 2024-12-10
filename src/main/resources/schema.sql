@@ -173,22 +173,22 @@ CREATE TABLE IF NOT EXISTS "copies" (
     CONSTRAINT fk_document 
     FOREIGN KEY (document_id) 
     REFERENCES documents (id)
-	ON DELETE RESTRICT,
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_library 
     FOREIGN KEY (library_id) 
     REFERENCES libraries (id)
-	ON DELETE RESTRICT,
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_warehouse 
     FOREIGN KEY (warehouse_id) 
     REFERENCES warehouses (id)
-	ON DELETE RESTRICT,
+	ON DELETE CASCADE,
     		
     CONSTRAINT fk_order 
    	FOREIGN KEY (order_id) 
     REFERENCES "orders" (id)
-	ON DELETE RESTRICT,
+	ON DELETE NO ACTION,
     		
     PRIMARY KEY (id)
 );

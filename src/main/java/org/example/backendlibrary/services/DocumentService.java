@@ -127,6 +127,8 @@ public class DocumentService {
             documentGenresRepository.addGenreToDocument(id, optionalGenre.get().getId());
         });
 
+        documentRepository.update(document);
+
         return documentMapper.toDocumentResponse(document);
     }
 
