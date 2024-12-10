@@ -8,7 +8,6 @@ import lombok.Getter;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    PRODUCT_NOTFOUND(1001, "Document not found", HttpStatus.BAD_REQUEST),
     GENRE_NOTFOUND(1001, "Genre not found", HttpStatus.BAD_REQUEST),
     LIBRARY_NOTFOUND(1001, "Library not found", HttpStatus.BAD_REQUEST),
     EMPLOYEE_NOTFOUND(1001, "Employee not found", HttpStatus.BAD_REQUEST),
@@ -18,7 +17,7 @@ public enum ErrorCode {
     WORKSHIFT_NOTFOUND(1001, "Workshift not found", HttpStatus.BAD_REQUEST),
     MEMBER_NOTFOUND(1001, "Member not found", HttpStatus.BAD_REQUEST),
     TRANSFER_NOTFOUND(1001, "Transfer not found", HttpStatus.BAD_REQUEST),
-    BORROW_TICKET_NOTFOUND(1001, "Borrow ticket not found", HttpStatus.BAD_REQUEST);
+    BORROW_TICKET_NOTFOUND(1001, "Borrow ticket not found", HttpStatus.BAD_REQUEST), DOCUMENT_NOTFOUND(1001, "Document not found", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

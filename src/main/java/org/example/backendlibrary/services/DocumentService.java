@@ -59,7 +59,7 @@ public class DocumentService {
         Optional<Document> optionalDocument = Optional.ofNullable(documentRepository.findById(id));
 
         if (optionalDocument.isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.DOCUMENT_NOTFOUND);
         }
 
         Document document = optionalDocument.get();
@@ -101,7 +101,7 @@ public class DocumentService {
         Optional<Document> optionalDocument = Optional.ofNullable(documentRepository.findById(id));
 
         if (optionalDocument.isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.DOCUMENT_NOTFOUND);
         }
 
         Document document = optionalDocument.get();
@@ -132,7 +132,7 @@ public class DocumentService {
 
     public void delete(Long id) {
         if (!documentRepository.existsById(id)) {
-            throw new AppException(ErrorCode.PRODUCT_NOTFOUND);
+            throw new AppException(ErrorCode.DOCUMENT_NOTFOUND);
         }
 
         documentRepository.deleteById(id);
