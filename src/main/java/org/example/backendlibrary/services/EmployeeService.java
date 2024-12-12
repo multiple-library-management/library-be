@@ -13,10 +13,7 @@ import org.example.backendlibrary.entities.WarehouseStaff;
 import org.example.backendlibrary.exceptions.AppException;
 import org.example.backendlibrary.exceptions.ErrorCode;
 import org.example.backendlibrary.mappers.EmployeeMapper;
-import org.example.backendlibrary.repositories.EmployeeRepository;
-import org.example.backendlibrary.repositories.LibrarianRepository;
-import org.example.backendlibrary.repositories.LibraryRepository;
-import org.example.backendlibrary.repositories.WarehouseStaffRepository;
+import org.example.backendlibrary.repositories.*;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +24,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final LibraryRepository libraryRepository;
     private final LibrarianRepository librarianRepository;
+    private final WarehouseRepository warehouseRepository;
     private final WarehouseStaffRepository warehouseStaffRepository;
 
     private final EmployeeMapper employeeMapper;
@@ -116,7 +114,7 @@ public class EmployeeService {
                     .build());
         } else if (employeeCreationRequest.getType().equalsIgnoreCase("warehouse_staff")) {
             // Check if the warehouse is present
-            if (!warehouseStaffRepository.existsByEmployeeId(employeeCreationRequest.getWarehouseId())) {
+            if (!warehouseRepository.existsById(employeeCreationRequest.getWarehouseId())) {
                 throw new AppException(ErrorCode.WAREHOUSE_NOTFOUND);
             }
 

@@ -77,9 +77,9 @@ public class CopyService {
 
         copyMapper.updateCopy(copy, copyUpdateRequest);
 
-        if (copy.getLibraryId() == 0) {
+        if (copy.getLibraryId() == null) {
             copy.setLibraryId(null);
-        } else if (copy.getWarehouseId() == 0) {
+        } else if (copy.getWarehouseId() == null) {
             copy.setWarehouseId(null);
         }
 
