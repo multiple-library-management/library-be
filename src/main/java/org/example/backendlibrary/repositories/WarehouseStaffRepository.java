@@ -25,7 +25,7 @@ public class WarehouseStaffRepository {
                 """
 				INSERT INTO warehouse_staffs (warehouse_id, employee_id)
 				VALUES (?, ?)
-				RETURNING id;
+				RETURNING employee_id;
 				""";
 
         return jdbcTemplate.queryForObject(

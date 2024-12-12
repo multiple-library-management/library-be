@@ -166,7 +166,7 @@ public class EmployeeService {
             librarianRepository.save(librarian);
         } else if (employeeUpdateRequest.getType().equalsIgnoreCase("warehouse_staff")) {
             // Check if the warehouse is present
-            if (!libraryRepository.existsById(employeeUpdateRequest.getWarehouseId())) {
+            if (!warehouseRepository.existsById(employeeUpdateRequest.getWarehouseId())) {
                 throw new AppException(ErrorCode.WAREHOUSE_NOTFOUND);
             }
 
