@@ -162,15 +162,19 @@ public class EmployeeService {
             }
 
             // delete librarian
-            Librarian librarian = librarianRepository.findByEmployeeId(id);
-            librarianRepository.deleteByEmployeeId(librarian.getEmployeeId());
+            Optional<Librarian> optionalLibrarian = Optional.ofNullable(librarianRepository.findByEmployeeId(id));
+
+            optionalLibrarian.ifPresent(librarian -> librarianRepository.deleteByEmployeeId(librarian.getEmployeeId()));
 
             // delete warehouse staff
-            WarehouseStaff warehouseStaff = warehouseStaffRepository.findByEmployeeId(id);
-            warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId());
+            Optional<WarehouseStaff> optionalWarehouseStaff =
+                    Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(id));
+
+            optionalWarehouseStaff.ifPresent(
+                    warehouseStaff -> warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId()));
 
             // recreate librarian
-            librarian = Librarian.builder()
+            Librarian librarian = Librarian.builder()
                     .employeeId(id)
                     .libraryId(employeeUpdateRequest.getLibraryId())
                     .build();
@@ -187,15 +191,19 @@ public class EmployeeService {
             }
 
             // delete librarian
-            Librarian librarian = librarianRepository.findByEmployeeId(id);
-            librarianRepository.deleteByEmployeeId(librarian.getEmployeeId());
+            Optional<Librarian> optionalLibrarian = Optional.ofNullable(librarianRepository.findByEmployeeId(id));
+
+            optionalLibrarian.ifPresent(librarian -> librarianRepository.deleteByEmployeeId(librarian.getEmployeeId()));
 
             // delete warehouse staff
-            WarehouseStaff warehouseStaff = warehouseStaffRepository.findByEmployeeId(id);
-            warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId());
+            Optional<WarehouseStaff> optionalWarehouseStaff =
+                    Optional.ofNullable(warehouseStaffRepository.findByEmployeeId(id));
+
+            optionalWarehouseStaff.ifPresent(
+                    warehouseStaff -> warehouseStaffRepository.deleteByEmployeeId(warehouseStaff.getEmployeeId()));
 
             // recreate warehouse staff
-            warehouseStaff = WarehouseStaff.builder()
+            WarehouseStaff warehouseStaff = WarehouseStaff.builder()
                     .employeeId(id)
                     .warehouseId(employeeUpdateRequest.getWarehouseId())
                     .build();
