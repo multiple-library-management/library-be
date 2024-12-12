@@ -104,7 +104,7 @@ VALUES
 
 ---------------Genres-----------------------------
 DELETE FROM genres ;
--- SELECT setval(pg_get_serial_sequence('genres', 'id'), 1, false);
+SELECT setval(pg_get_serial_sequence('genres', 'id'), 1, false);
 INSERT INTO genres ("name") VALUES
 ('Fiction'),
 ('Classics'),
@@ -5989,8 +5989,7 @@ INSERT INTO copies (fee, status, document_id, library_id, warehouse_id, order_id
 (5000, 'available', 53, 5, NULL, 5),
 (5000, 'available', 53, 5, NULL, 5),
 (5000, 'available', 53, 5, NULL, 5),
-(5000, 'available', 53, 5, NULL, 5),
-(5000, 'available', 53, 5, NULL, 5),
+(5000, 'available', 53, 5, NULL, 5),(5000, 'available', 53, 5, NULL, 5),
 (5000, 'available', 53, 5, NULL, 5),
 (5000, 'available', 53, 5, NULL, 5),
 (5000, 'available', 53, 5, NULL, 5),

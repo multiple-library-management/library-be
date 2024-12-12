@@ -52,9 +52,9 @@ public class CopyService {
     public CopyResponse create(CopyCreationRequest copyCreationRequest) {
         Copy copy = copyMapper.toCopy(copyCreationRequest);
 
-        if (copy.getLibraryId() == 0) {
+        if (copy.getLibraryId() == null) {
             copy.setLibraryId(null);
-        } else if (copy.getWarehouseId() == 0) {
+        } else if (copy.getWarehouseId() == null) {
             copy.setWarehouseId(null);
         }
 
