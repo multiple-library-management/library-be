@@ -101,6 +101,8 @@ public class EmployeeService {
         Long employeeId = employeeRepository.save(employee);
         employee.setId(employeeId);
 
+        EmployeeResponse employeeResponse = employeeMapper.toEmployeeResponse(employee);
+
         if (employeeCreationRequest.getType().equalsIgnoreCase("librarian")) {
             // Check if the library is present
             if (!libraryRepository.existsById(employeeCreationRequest.getLibraryId())) {
@@ -112,6 +114,10 @@ public class EmployeeService {
                     .employeeId(employeeId)
                     .libraryId(employeeCreationRequest.getLibraryId())
                     .build());
+
+            employeeResponse.setType("librarian");
+            employeeResponse.setLibraryId(employeeCreationRequest.getLibraryId());
+            employeeResponse.setWarehouseId(null);
         } else if (employeeCreationRequest.getType().equalsIgnoreCase("warehouse_staff")) {
             // Check if the warehouse is present
             if (!warehouseRepository.existsById(employeeCreationRequest.getWarehouseId())) {
@@ -123,9 +129,13 @@ public class EmployeeService {
                     .employeeId(employeeId)
                     .warehouseId(employeeCreationRequest.getWarehouseId())
                     .build());
+
+            employeeResponse.setType("warehouse_staff");
+            employeeResponse.setLibraryId(null);
+            employeeResponse.setWarehouseId(employeeCreationRequest.getWarehouseId());
         }
 
-        return employeeMapper.toEmployeeResponse(employee);
+        return employeeResponse;
     }
 
     public EmployeeResponse update(long id, EmployeeUpdateRequest employeeUpdateRequest) {
@@ -141,6 +151,8 @@ public class EmployeeService {
         employeeMapper.updateEmployee(employee, employeeUpdateRequest);
 
         employeeRepository.update(employee);
+
+        EmployeeResponse employeeResponse = employeeMapper.toEmployeeResponse(employee);
 
         // update role of employee
         if (employeeUpdateRequest.getType().equalsIgnoreCase("librarian")) {
@@ -164,6 +176,10 @@ public class EmployeeService {
                     .build();
 
             librarianRepository.save(librarian);
+
+            employeeResponse.setType("librarian");
+            employeeResponse.setLibraryId(librarian.getLibraryId());
+            employeeResponse.setWarehouseId(null);
         } else if (employeeUpdateRequest.getType().equalsIgnoreCase("warehouse_staff")) {
             // Check if the warehouse is present
             if (!warehouseRepository.existsById(employeeUpdateRequest.getWarehouseId())) {
@@ -185,9 +201,12 @@ public class EmployeeService {
                     .build();
 
             warehouseStaffRepository.save(warehouseStaff);
+            employeeResponse.setType("warehouse_staff");
+            employeeResponse.setLibraryId(null);
+            employeeResponse.setWarehouseId(warehouseStaff.getWarehouseId());
         }
 
-        return employeeMapper.toEmployeeResponse(employee);
+        return employeeResponse;
     }
 
     public void delete(Long id) {
